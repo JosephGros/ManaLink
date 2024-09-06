@@ -158,7 +158,7 @@ const RegisterForm = () => {
                 <div className="mt-4">
                     {message && <p style={{ color: 'green' }}>{message}</p>}
                     {error && <p style={{ color: 'red' }}>{error}</p>}
-                </div>
+                </div> 
             </div>
         </div>
         </>
