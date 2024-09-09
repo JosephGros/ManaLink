@@ -14,6 +14,10 @@ const validateInput = (username: string, email: string, firstName: string, lastN
     firstName = sanitizeInput(firstName);
     lastName = sanitizeInput(lastName);
 
+    if (username.length < 3) {
+        return { error: 'Username must be at least 3 characters long' };
+    }
+
     if (!/^[\p{L}\p{N}._-]+$/u.test(username)) {
         return { error: 'Username can only contain letters, numbers, periods, hyphens, and underscores.' };
     }
@@ -28,6 +32,10 @@ const validateInput = (username: string, email: string, firstName: string, lastN
 
     if (!/^[\p{L}]+$/u.test(lastName)) {
         return { error: 'Invalid characters in last name' };
+    }
+
+    if (password.length < 8) {
+        return { error: "Password must be at least 8 characters long" };
     }
 
     if (!/(?=.*[A-Z])(?=.*\d)/.test(password)) {
@@ -123,26 +131,26 @@ const RegisterForm = () => {
 
                 <form onSubmit={handleSubmit}>
                     <div className="flex justify-center">
-                        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" required className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 drop-shadow-2xl focus:outline-none focus:ring focus:ring-lightaccent p-2" />
+                        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" required className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2" />
                     </div>
                     <div className="flex justify-center">
-                        <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 focus:outline-none focus:ring focus:ring-lightaccent p-2" />
+                        <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2" />
                     </div>
                     <div className="flex justify-center">
-                        <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First name" required className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 focus:outline-none focus:ring focus:ring-lightaccent p-2" />
+                        <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First name" required className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2" />
                     </div>
                     <div className="flex justify-center">
-                        <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last name" required className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 focus:outline-none focus:ring focus:ring-lightaccent p-2" />
+                        <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last name" required className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2" />
                     </div>
                     <div className="flex justify-center">
-                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 focus:outline-none focus:ring focus:ring-lightaccent p-2" />
+                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2" />
                     </div>
                     <div className="flex justify-center">
-                        <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm password" required className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 focus:outline-none focus:ring focus:ring-lightaccent p-2" />
+                        <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm password" required className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2" />
                     </div>
 
                     <div className="flex flex-row justify-evenly w-96 pt-6">    
-                        <button className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold italic">
+                        <button className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold italic shadow-lg">
                             <a href="/login">Login</a>
                         </button>
                         <div className="w-16 h-9 content-center">
@@ -151,7 +159,7 @@ const RegisterForm = () => {
                                 <CustomLoader />
                             </div> : ""}
                         </div>
-                        <button type="submit" className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold italic">
+                        <button type="submit" className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold italic shadow-lg">
                             Register
                         </button>
                     </div>

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
     "ldrs": "^1.0.2",
     "mongodb": "^6.8.0",
     "mongoose": "^8.6.1",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.16.4",
     "@types/react": "^18",
     "@types/react-dom": "^18",
