@@ -10,6 +10,7 @@ export const CustomLoader = () => {
       stroke-length="0.15"
       bg-opacity="0.38"
       speed="1.4"
-      color="#39CCCC"></l-trefoil>
+      color="#39CCCC">
+    </l-trefoil>
   );
 };

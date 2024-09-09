@@ -3,9 +3,9 @@ import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { CustomLoader } from "./CustomLoading";
 
-const sanitizeInput = (str: string) => {
-    return str.replace(/[^\x20-\x7EåäöÅÄÖ]/g, '');
-}
+const sanitizeInput = (str: string): string => {
+    return str.trim().replace(/[^\p{L}\p{N}\s@._-]/gu, '').normalize('NFC');
+};
 
 const validateInput = (username: string, email: string, firstName: string, lastName: string, password: string, confirmPassword: string) => {
 
@@ -14,20 +14,20 @@ const validateInput = (username: string, email: string, firstName: string, lastN
     firstName = sanitizeInput(firstName);
     lastName = sanitizeInput(lastName);
 
-    if (!/^[a-zA-ZåäöÅÄÖ0-9]+$/.test(username)) {
-        return { error: 'Username can only contain these characters (letters and numbers)' };
+    if (!/^[\p{L}\p{N}._-]+$/u.test(username)) {
+        return { error: 'Username can only contain letters, numbers, periods, hyphens, and underscores.' };
     }
 
-    if (!/^\S+@\S+\.\S+$/.test(email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         return { error: "Invalid email format" };
     }
 
-    if (!/^[a-zA-ZåäöÅÄÖ]+$/.test(firstName)) {
-        return { error: 'Invalid charachters try again!' };
+    if (!/^[\p{L}]+$/u.test(firstName)) {
+        return { error: 'Invalid characters in first name' };
     }
 
-    if (!/^[a-zA-ZåäöÅÄÖ]+$/.test(lastName)) {
-        return { error: 'Invalid charachters try again!' };
+    if (!/^[\p{L}]+$/u.test(lastName)) {
+        return { error: 'Invalid characters in last name' };
     }
 
     if (!/(?=.*[A-Z])(?=.*\d)/.test(password)) {
@@ -38,7 +38,7 @@ const validateInput = (username: string, email: string, firstName: string, lastN
         return { error: "Passwords do not match" };
     }
 
-    return { error: null };
+    return { error: null, username, email, firstName, lastName, password, confirmPassword };
 }
 
 
@@ -70,6 +70,8 @@ const RegisterForm = () => {
             return;
         }
 
+        console.log('Validated : ', validation);
+
         const payload = {
             username,
             email,
@@ -77,13 +79,13 @@ const RegisterForm = () => {
             lastName,
             password,
             confirmPassword
-        }
+        };
 
         try {
             const response = await fetch('/api/register', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json; charset=utf-8'
                 },
                 body: JSON.stringify(payload),
             });
