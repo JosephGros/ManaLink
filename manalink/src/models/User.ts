@@ -35,7 +35,15 @@ const UserSchema = new mongoose.Schema({
         enum: ['admin', 'moderrator', 'user'],
         required: true,
         default: 'user'
-    }    
+    },
+    twoFactorEnabled: {
+        type: Boolean,
+        default: false 
+    },
+    twoFactorSecret: {
+        type: String,
+        required: false
+    }
 });
 
 UserSchema.pre('save', async function (next) {

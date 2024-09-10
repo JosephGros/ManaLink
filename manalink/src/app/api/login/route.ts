@@ -22,14 +22,19 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Invalid credentials' }, { status: 400 });
         }
 
+        if (user.twoFactorEnabled) {
+            return NextResponse.json({ twoFactorEnabled: true, userId: user._id });
+        }
+
         const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
+        const oneHour = 3600;
 
         const response = NextResponse.json({ message: 'Login successful!', token }, { status: 200 });
 
         response.cookies.set('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            maxAge: 3600,
+            maxAge: oneHour,
             path: '/',
             sameSite: 'lax',
         });
