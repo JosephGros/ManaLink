@@ -18,6 +18,7 @@ export async function POST(req: Request) {
 
         const secret = authenticator.generateSecret();
         user.twoFactorSecret = secret;
+        user.twoFactorEnabled = true;
 
         await user.save();
 

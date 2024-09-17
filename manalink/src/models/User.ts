@@ -43,7 +43,19 @@ const UserSchema = new mongoose.Schema({
     twoFactorSecret: {
         type: String,
         required: false
-    }
+    },
+    knownDevices: [
+        {
+            metadata: {
+                browser: String,
+                os: String,
+            },
+            ip: {
+                type: String,
+                required: true 
+            }
+        }
+    ]
 });
 
 UserSchema.pre('save', async function (next) {

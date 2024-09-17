@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Setup2FA from "../components/Setup2FA";
 import LogoutButton from "../components/LogoutBtn";
+import UpdateUserForm from "../components/UpdateUserForm";
 
 const HomePage = () => {
 
@@ -10,7 +11,7 @@ const HomePage = () => {
     const [userId, setUserId] = useState(''); 
 
     const handleTestSetup = () => {
-        setUserId('');
+        setUserId('66e19f848f2abae307045686');
     };
 
     return (
@@ -36,6 +37,10 @@ const HomePage = () => {
                 <button className="bg-btn text-textcolor p-2 rounded-md mt-4">
                     <a href="/moderator">Moderator</a>
                 </button>
+            </div>
+
+            <div>
+                <UpdateUserForm />
             </div>
         </div>
     );

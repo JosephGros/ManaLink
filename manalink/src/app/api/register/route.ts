@@ -1,10 +1,9 @@
 import dbConnect from '@/lib/mongoose';
 import User from '@/models/User';
 import { NextResponse } from 'next/server';
-import utf8 from 'utf8';
 
 const generateUserCode = async (): Promise<string> => {
-    
+
     const min = 100000;
     const max = 999999;
     let userCode: string = '';
@@ -12,7 +11,7 @@ const generateUserCode = async (): Promise<string> => {
 
     while (!isUnique) {
         userCode = Math.floor(Math.random() * (max - min + 1)) + min + '';
-        
+
         const existingUser = await User.findOne({ userCode });
         if (!existingUser) {
             isUnique = true;
@@ -47,14 +46,15 @@ export async function POST(req: Request) {
         const userCode = await generateUserCode();
         const userRole = role ?? 'user';
         console.log({ sanitizedUsername, sanitizedEmail, sanitizedFirstName, sanitizedLastName, password, userCode, role: userRole });
-        const user = new User({ 
-            username: sanitizedUsername, 
-            email: sanitizedEmail, 
-            firstName: sanitizedFirstName, 
-            lastName: sanitizedLastName, 
-            password, 
-            userCode, 
-            role: userRole });
+        const user = new User({
+            username: sanitizedUsername,
+            email: sanitizedEmail,
+            firstName: sanitizedFirstName,
+            lastName: sanitizedLastName,
+            password,
+            userCode,
+            role: userRole
+        });
         await user.save();
 
         return NextResponse.json({ message: 'User registered successfully!' }, { status: 201 });

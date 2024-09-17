@@ -2,6 +2,23 @@
 import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
 import { CustomLoader } from "./CustomLoading";
+import eyeOpen from "../../../public/assets/eye.png";
+import eyeClosed from "../../../public/assets/eye-crossed.png";
+import Image from "next/image";
+
+const getIpAddress = async () => {
+  try {
+    const response = await fetch("/api/get-ip");
+    if (!response.ok) {
+      throw new Error(`Failed to fetch IP: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data.ip;
+  } catch (error) {
+    console.error("Error fetching IP address:", error);
+    return null;
+  }
+};
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +29,7 @@ const LoginForm = () => {
   const [twoFactorCode, setTwoFactorCode] = useState(["", "", "", "", "", ""]);
   const [twoFactorRequired, setTwoFactorRequired] = useState(false);
   const [userId, setUserId] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -22,12 +40,14 @@ const LoginForm = () => {
     setLoading(true);
     setError(null);
 
-    const payload = {
-      email,
-      password,
-    };
-
     try {
+      const ipAddress = await getIpAddress();
+      if (!ipAddress) {
+        throw new Error("Unable to retrieve IP address");
+      }
+
+      const payload = { email, password, ipAddress };
+
       const response = await fetch("/api/login", {
         method: "POST",
         headers: {
@@ -38,7 +58,7 @@ const LoginForm = () => {
 
       const data = await response.json();
 
-      if (response.ok && data.twoFactorEnabled) {
+      if (response.ok && data.twoFactorRequired) {
         setTwoFactorRequired(true);
         setUserId(data.userId);
       } else if (response.ok) {
@@ -54,7 +74,10 @@ const LoginForm = () => {
     }
   };
 
-  const handleTwoFactorChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleTwoFactorChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
     const value = e.target.value;
     if (value.match(/^\d{1}$/)) {
       const newCode = [...twoFactorCode];
@@ -67,7 +90,10 @@ const LoginForm = () => {
     }
   };
 
-  const handleTwoFactorKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+  const handleTwoFactorKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
     if (e.key === "Backspace" && !twoFactorCode[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
@@ -83,6 +109,7 @@ const LoginForm = () => {
     const payload = {
       userId,
       token: fullCode,
+      ipAddress: await getIpAddress(),
     };
 
     try {
@@ -109,6 +136,10 @@ const LoginForm = () => {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <>
       <div className="flex justify-center">
@@ -130,17 +161,39 @@ const LoginForm = () => {
                 />
               </div>
               <div className="flex justify-center">
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Password"
-                  required
-                  className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2"
-                />
+                <div className="relative w-56">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    required
+                    className="w-full h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2 pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                  >
+                    <Image
+                      src={showPassword ? eyeClosed : eyeOpen}
+                      alt={showPassword ? "Hide Password" : "Show Password"}
+                      width={24}
+                      height={24}
+                    />
+                  </button>
+                </div>
               </div>
-
-              <div className="flex flex-row justify-evenly w-96 pt-6">
+              <div className="flex justify-center">
+                <button
+                  type="button"
+                  className="text-xs text-lightaccent hover:underline"
+                  onClick={() => router.push("/request-pass-reset")}
+                >
+                  Forgot Password?
+                </button>
+              </div>
+              <div className="flex flex-row justify-center w-96 pt-4">
                 <button className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold italic shadow-lg">
                   <a href="/register">Register</a>
                 </button>
@@ -167,7 +220,9 @@ const LoginForm = () => {
                 {twoFactorCode.map((digit, index) => (
                   <input
                     key={index}
-                    ref={(el) => { inputRefs.current[index] = el; }}
+                    ref={(el) => {
+                      inputRefs.current[index] = el;
+                    }}
                     type="text"
                     inputMode="numeric"
                     maxLength={1}
@@ -182,21 +237,21 @@ const LoginForm = () => {
 
               <div className="flex flex-row justify-center w-96 pt-6">
                 <button
-                    type="submit"
-                    className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold italic shadow-lg"
-                    >
-                    Verify 2FA
+                  type="submit"
+                  className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold italic shadow-lg"
+                >
+                  Verify 2FA
                 </button>
               </div>
               <div className="flex flex-row justify-center w-96 pt-6">
                 <div className="w-16 h-9 self-end">
-                    {loading ? (
-                        <div className="flex justify-center">
-                        <CustomLoader />
-                        </div>
-                    ) : (
-                        ""
-                    )}
+                  {loading ? (
+                    <div className="flex justify-center">
+                      <CustomLoader />
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </form>
