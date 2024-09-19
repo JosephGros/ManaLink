@@ -40,6 +40,12 @@ const HomePage = () => {
             </div>
 
             <div>
+                <button className="bg-btn text-textcolor p-2 rounded-md mt-4">
+                    <a href="/profile">Profile</a>
+                </button>
+            </div>
+
+            <div>
                 <UpdateUserForm />
             </div>
         </div>

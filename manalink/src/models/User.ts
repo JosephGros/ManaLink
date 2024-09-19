@@ -32,13 +32,45 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['admin', 'moderrator', 'user'],
+        enum: ['admin', 'moderator', 'user'],
         required: true,
         default: 'user'
     },
+    profilePicture: {
+        type: String,
+        default: '/assets/profile-pics/mtg.webp'
+    },
+    xp: {
+        type: Number,
+        default: 0
+    },
+    level: {
+        type: Number,
+        default: 1
+    },
+    gamesPlayed: {
+        type: Number,
+        default: 0
+    },
+    gamesWon: {
+        type: Number,
+        default: 0
+    },
+    friends: {
+        type: [String],
+        default: []
+    },
+    playgroups: {
+        type: [String],
+        default: []
+    },
+    achievements: {
+        type: [String],
+        default: []
+    },
     twoFactorEnabled: {
         type: Boolean,
-        default: false 
+        default: false
     },
     twoFactorSecret: {
         type: String,
@@ -52,7 +84,7 @@ const UserSchema = new mongoose.Schema({
             },
             ip: {
                 type: String,
-                required: true 
+                required: true
             }
         }
     ]

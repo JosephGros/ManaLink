@@ -147,7 +147,6 @@ const LoginForm = () => {
           <h1 className="font-bold italic text-textcolor text-4xl pb-6">
             Login
           </h1>
-
           {!twoFactorRequired ? (
             <form onSubmit={handleSubmit}>
               <div className="flex justify-center drop-shadow-md">
@@ -157,7 +156,7 @@ const LoginForm = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email"
                   required
-                  className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2"
+                  className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholder:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2"
                 />
               </div>
               <div className="flex justify-center">
@@ -168,7 +167,7 @@ const LoginForm = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password"
                     required
-                    className="w-full h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2 pr-10"
+                    className="w-full h-10 bg-input bg-opacity-20 rounded-md placeholder:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2 pr-10"
                   />
                   <button
                     type="button"

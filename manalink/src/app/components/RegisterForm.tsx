@@ -143,7 +143,7 @@ const RegisterForm = () => {
 
         setTimeout(() => {
           router.push("/login");
-        }, 2000);
+        });
       } else {
         setError(data.error);
       }

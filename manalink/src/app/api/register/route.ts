@@ -30,7 +30,21 @@ const sanitizeAndEncodeUTF8 = (str: string): string => {
 
 export async function POST(req: Request) {
     try {
-        const { username, email, firstName, lastName, password, confirmPassword, role } = await req.json();
+        const { 
+            username, 
+            email, 
+            firstName, 
+            lastName, 
+            password, 
+            confirmPassword, 
+            role, 
+            xp,
+            level,
+            gamesPlayed,
+            gamesWon,
+            friends,
+            achievements
+        } = await req.json();
 
         const sanitizedUsername = sanitizeAndEncodeUTF8(username);
         const sanitizedEmail = sanitizeAndEncodeUTF8(email);
@@ -45,16 +59,28 @@ export async function POST(req: Request) {
 
         const userCode = await generateUserCode();
         const userRole = role ?? 'user';
-        console.log({ sanitizedUsername, sanitizedEmail, sanitizedFirstName, sanitizedLastName, password, userCode, role: userRole });
+        const userXp = xp ?? 0;
+        const userLevel = level ?? 1;
+        const userGamesPlayed = gamesPlayed ?? 0;
+        const userGamesWon = gamesWon ?? 0;
+        const userFriends = friends ?? [];
+        const userAchievements = achievements ?? [];
         const user = new User({
-            username: sanitizedUsername,
-            email: sanitizedEmail,
-            firstName: sanitizedFirstName,
-            lastName: sanitizedLastName,
+            username: username.trim(),
+            email: email.trim(),
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
             password,
             userCode,
-            role: userRole
+            role: userRole,
+            xp: userXp,
+            level: userLevel,
+            gamesPlayed: userGamesPlayed,
+            gamesWon: userGamesWon,
+            friends: userFriends,
+            achievements: userAchievements,
         });
+        console.log('New User : ', user);
         await user.save();
 
         return NextResponse.json({ message: 'User registered successfully!' }, { status: 201 });

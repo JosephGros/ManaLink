@@ -3,6 +3,7 @@ import User from "@/models/User";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import ManaLinkLogo from "../../../public/assets/ManaLinkLogo.png";
 
 
 const JWT_SECRET: any = process.env.JWT_SECRET;
@@ -35,14 +36,15 @@ export async function POST(req: Request) {
         });
 
         const resetLink = `${BASE_URL}/reset-password?token=${resetToken}`;
+        const logoUrl = `${BASE_URL}/assets/ManaLinkLogo.png`;
 
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: email,
             subject: "Password Reset Request",
             html: `
-            <h1>ManaLink</h1>
-            <p>Click the link to reset your password: <br> <a href="${resetLink}">${resetLink}</a></p>`,
+            <img src="${logoUrl}" alt="ManaLink Logo" width="250px" style="max-width:100%; height:auto;" />
+            <p>Click the link to reset your password: <a href="${resetLink}">Reset Password</a></p>`,
         });
 
         return NextResponse.json({ message: "Reset email sent!" }, { status: 200 });
