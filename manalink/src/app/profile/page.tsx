@@ -1,7 +1,7 @@
 "use client";
 import { calculateRequiredXP } from "@/lib/xpConstants";
 import { useEffect, useState } from "react";
-import { CustomLoader } from "../components/CustomLoading";
+// import { CustomLoader } from "../components/CustomLoading";
 import Image from "next/image";
 
 const Profile = () => {
@@ -52,7 +52,7 @@ const Profile = () => {
   if (loading) {
     return (
       <div className="flex justify-center">
-        <CustomLoader />
+        {/* <CustomLoader /> */}
       </div>
     );
   }
@@ -69,11 +69,13 @@ const Profile = () => {
     <div className="flex justify-center">
       <div className="flex items-center flex-col w-96 h-screen p-4 pt-28">
         <div>
-          <img
+          <Image
             src={
               user.profilePicture || "/assets/profile-pics/default-avatar.png"
             }
             alt="Profile picture"
+            width={160}
+            height={160}
             className="w-40 h-40 rounded-full object-cover mb-4"
           />
           <a href="/user-settings">Settings</a>
@@ -105,42 +107,52 @@ const Profile = () => {
         <div className="flex flex-col w-96 p-2 rounded-md bg-bg2">
           <div className="mt-4 font-bold italic text-textcolor text-lg">
             <div className="flex items-center mb-5 ml-2">
-              <img
+              <Image
                 src="/assets/Icons/IconColor/users.png"
                 alt="Friends Icon"
+                width={32}
+                height={32}
                 className="w-8 h-8 mr-4"
               />
               <a href="">{user.friends.length} - Friends</a>
             </div>
             <a href=""></a>
             <div className="flex items-center mb-5 ml-2">
-              <img
+              <Image
                 src="/assets/Icons/IconColor/trophy-star.png"
                 alt="Achievements Icon"
+                width={32}
+                height={32}
                 className="w-8 h-8 mr-4"
               />
               <a href="">{user.achievements.length} - Achievements</a>
             </div>
             <div className="flex items-center mb-5 ml-2">
-              <img
+              <Image
                 src="/assets/Icons/IconColor/dice-d20_1.png"
                 alt="Playgroups Icon"
+                width={32}
+                height={32}
                 className="w-8 h-8 mr-4"
               />
               <a href="">{user.playgroups.length} - Playgroups</a>
             </div>
             <div className="flex items-center mb-5 ml-2">
-              <img
+              <Image
                 src="/assets/Icons/IconColor/medal.png"
                 alt="Wins Icon"
+                width={32}
+                height={32}
                 className="w-8 h-8 mr-4"
               />
               <a href="">{user.gamesWon} - Wins</a>
             </div>
             <div className="flex items-center mb-5 ml-2">
-              <img
+              <Image
                 src="/assets/Icons/IconColor/book-dead12.png"
                 alt="Games Played Icon"
+                width={32}
+                height={32}
                 className="w-8 h-8 mr-4"
               />
               <a href="">{user.gamesPlayed} - Games Played</a>

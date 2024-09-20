@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useState } from "react";
 
 const ProfilePicture = () => {
@@ -47,9 +48,11 @@ const ProfilePicture = () => {
                   selectedPicture === image ? "border-inset border-light-btn" : ""
                 }`}
               >
-                <img
+                <Image
                   src={image}
                   alt="Avatar"
+                  width={112}
+                  height={112}
                   className={`w-28 h-28 rounded-full border-4 ${
                     selectedPicture === image ? "border-inset border-logo" : "border-icon"
                   }`}

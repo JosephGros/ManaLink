@@ -15,25 +15,25 @@ export default function AdminPage() {
   );
 }
 
-export async function AdminGuard() {
-  const cookieStore = cookies();
-  const token = cookieStore.get('token')?.value;
+// export async function AdminGuard() {
+//   const cookieStore = cookies();
+//   const token = cookieStore.get('token')?.value;
 
-  if (!token) {
-    redirect('/login');
-  }
+//   if (!token) {
+//     redirect('/login');
+//   }
 
-  try {
-    const jwtSecret = process.env.JWT_SECRET as string;
+//   try {
+//     const jwtSecret = process.env.JWT_SECRET as string;
 
-    const decodedToken = jwt.verify(token, jwtSecret) as { role: string };
+//     const decodedToken = jwt.verify(token, jwtSecret) as { role: string };
 
-    if (decodedToken.role !== 'admin') {
-      redirect('/not-authorized');
-    }
+//     if (decodedToken.role !== 'admin') {
+//       redirect('/not-authorized');
+//     }
     
-    return null;
-  } catch (error) {
-    redirect('/login');
-  }
-}
+//     return null;
+//   } catch (error) {
+//     redirect('/login');
+//   }
+// }

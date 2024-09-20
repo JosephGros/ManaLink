@@ -1,17 +1,18 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import addXpAndLevelUp from "@/lib/xp";
+import { NextRequest, NextResponse } from 'next/server';
+import addXpAndLevelUp from '@/lib/xp';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === "POST") {
-    const { userId, xpEarned } = req.body;
+export async function POST(req: NextRequest) {
+  try {
+    const { userId, xpEarned } = await req.json();
 
-    try {
-      const updatedUser = await addXpAndLevelUp(userId, xpEarned);
-      res.status(200).json({ success: true, user: updatedUser });
-    } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+    if (!userId || typeof xpEarned !== 'number') {
+      return NextResponse.json({ success: false, message: 'Invalid input' }, { status: 400 });
     }
-  } else {
-    res.status(405).json({ message: "Method Not Allowed" });
+
+    const updatedUser = await addXpAndLevelUp(userId, xpEarned);
+
+    return NextResponse.json({ success: true, user: updatedUser }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 }

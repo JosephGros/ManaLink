@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import ProfilePicture from "../components/ProfilePicture";
 import UpdateUserForm from "../components/UpdateUserForm";
-import { CustomLoader } from "../components/CustomLoading";
+// import { CustomLoader } from "../components/CustomLoading";
+import Image from "next/image";
 
 const UserSettingsPage = () => {
   const [user, setUser] = useState<any>(null);
@@ -28,7 +29,7 @@ const UserSettingsPage = () => {
   if (loading) {
     return (
       <div className="flex justify-center">
-        <CustomLoader />
+        {/* <CustomLoader /> */}
       </div>
     );
   }
@@ -42,11 +43,12 @@ const UserSettingsPage = () => {
       <div className="rounded-md bg-bg2 flex flex-col w-96 p-4">
         <div className="flex flex-col justify-center items-center">
             <div className="relative group w-40 h-40 mb-4">
-            <img
+            <Image
                 src={
                 user.profilePicture || "/assets/profile-pics/default-avatar.png"
                 }
                 alt="Profile picture"
+                layout="fill"
                 className="w-full h-full rounded-full object-cover"
             />
             <div className="absolute inset-0 bg-background bg-opacity-25 rounded-full flex items-end justify-center">

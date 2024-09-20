@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useState } from 'react';
 
 const Setup2FA = ({ userId }: { userId: string }) => {
@@ -31,7 +32,7 @@ const Setup2FA = ({ userId }: { userId: string }) => {
             {qrCode && (
                 <div className="mt-4">
                     <p>Scan this QR code with your authenticator app:</p>
-                    <img src={qrCode} alt="QR Code for 2FA" />
+                    <Image src={qrCode} alt="QR Code for 2FA" />
                 </div>
             )}
             {error && <p className="text-red-500">{error}</p>}

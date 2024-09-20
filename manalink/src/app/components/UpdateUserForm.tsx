@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { CustomLoader } from "./CustomLoading";
+// import { CustomLoader } from "./CustomLoading";
 import eyeOpen from "../../../public/assets/eye.png";
 import eyeClosed from "../../../public/assets/eye-crossed.png";
 import Image from "next/image";
@@ -161,7 +161,7 @@ const UpdateUserForm = () => {
               <div className="w-16 h-9 items-center content-center">
                 {loading ? (
                   <div className="flex justify-center">
-                    <CustomLoader />
+                    {/* <CustomLoader /> */}
                   </div>
                 ) : (
                   ""
