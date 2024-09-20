@@ -49,12 +49,13 @@ const Profile = () => {
     return "/assets/Icons/lvl/XP00.png";
   };
 
-  if (loading)
+  if (loading) {
     return (
-      <div>
+      <div className="flex justify-center">
         <CustomLoader />
       </div>
     );
+  }
 
   if (!user) return <div>No user data available</div>;
 
@@ -120,7 +121,6 @@ const Profile = () => {
               />
               <a href="">{user.achievements.length} - Achievements</a>
             </div>
-
             <div className="flex items-center mb-5 ml-2">
               <img
                 src="/assets/Icons/IconColor/dice-d20_1.png"
@@ -129,7 +129,6 @@ const Profile = () => {
               />
               <a href="">{user.playgroups.length} - Playgroups</a>
             </div>
-
             <div className="flex items-center mb-5 ml-2">
               <img
                 src="/assets/Icons/IconColor/medal.png"
@@ -138,7 +137,6 @@ const Profile = () => {
               />
               <a href="">{user.gamesWon} - Wins</a>
             </div>
-
             <div className="flex items-center mb-5 ml-2">
               <img
                 src="/assets/Icons/IconColor/book-dead12.png"

@@ -89,7 +89,6 @@ const UpdateUserForm = () => {
           <h1 className="font-bold italic text-textcolor text-4xl pb-6">
             Update Profile
           </h1>
-          <div>{token ? `Token: ${token}` : "No token found"}</div>
           <form onSubmit={handleUpdate}>
             <div className="flex justify-center">
               <div className="relative w-56">
@@ -124,7 +123,6 @@ const UpdateUserForm = () => {
                 className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2"
               />
             </div>
-
             <div className="flex justify-center">
               <input
                 type="email"
@@ -134,7 +132,6 @@ const UpdateUserForm = () => {
                 className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2"
               />
             </div>
-
             <div className="flex justify-center">
               <input
                 type={showPassword ? "text" : "password"}
@@ -144,7 +141,6 @@ const UpdateUserForm = () => {
                 className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2"
               />
             </div>
-
             <div className="flex justify-center">
               <input
                 type="text"
@@ -155,9 +151,14 @@ const UpdateUserForm = () => {
                 className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2"
               />
             </div>
-
-            <div className="flex flex-row justify-evenly w-96 pt-4">
-              <div className="w-16 h-9 content-center">
+            <div className="flex flex-col justify-center items-center w-96 pt-4">
+              <button
+                type="submit"
+                className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold italic shadow-lg"
+              >
+                Update
+              </button>
+              <div className="w-16 h-9 items-center content-center">
                 {loading ? (
                   <div className="flex justify-center">
                     <CustomLoader />
@@ -166,12 +167,6 @@ const UpdateUserForm = () => {
                   ""
                 )}
               </div>
-              <button
-                type="submit"
-                className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold italic shadow-lg"
-              >
-                Update Profile
-              </button>
             </div>
           </form>
 

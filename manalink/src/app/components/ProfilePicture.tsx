@@ -1,9 +1,10 @@
-// ProfileSettings.tsx
 "use client";
 import { useState } from "react";
 
-const ProfileSettings = () => {
-  const [selectedPicture, setSelectedPicture] = useState("/assets/profile-pics/default-avatar.png");
+const ProfilePicture = () => {
+  const [selectedPicture, setSelectedPicture] = useState(
+    "/assets/profile-pics/default-avatar.png"
+  );
 
   const presetImages = Array.from({ length: 54 }, (_, i) => {
     return `/assets/profile-pics/avatar${i + 1}.png`;
@@ -32,30 +33,40 @@ const ProfileSettings = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="flex flex-col w-96 p-4 rounded-md bg-bg2 justify-center items-center">
-        <h1 className="font-bold italic text-textcolor text-4xl pb-6">Select Profile Picture</h1>
-        <div className="grid grid-cols-6 gap-4">
-          {presetImages.map((image) => (
-            <div
-              key={image}
-              onClick={() => setSelectedPicture(image)}
-              className={`cursor-pointer ${
-                selectedPicture === image ? "border-2 border-blue-500" : ""
-              }`}
-            >
-              <img src={image} alt="Avatar" className="w-20 h-20 rounded-full" />
-            </div>
-          ))}
+      <div className="flex flex-col w-96 p-4 justify-center items-center">
+        <h1 className="font-bold italic text-textcolor text-2xl pb-6">
+          Select Profile Picture
+        </h1>
+        <div className="w-96 h-64 overflow-y-scroll p-2 shadow-[inset_0_2px_4px_rgba(42,42,42,1),inset_0_-2px_4px_rgba(42,42,42,1)] rounded-md"> 
+          <div className="flex flex-wrap justify-center">
+            {presetImages.map((image) => (
+              <div
+                key={image}
+                onClick={() => setSelectedPicture(image)}
+                className={`cursor-pointer p-1 rounded-full ${
+                  selectedPicture === image ? "border-inset border-light-btn" : ""
+                }`}
+              >
+                <img
+                  src={image}
+                  alt="Avatar"
+                  className={`w-28 h-28 rounded-full border-4 ${
+                    selectedPicture === image ? "border-inset border-logo" : "border-icon"
+                  }`}
+                />
+              </div>
+            ))}
+          </div>
         </div>
         <button
           onClick={handleUpdateProfilePicture}
           className="mt-4 w-28 h-9 bg-light-btn rounded-md text-nav font-bold italic shadow-lg"
         >
-          Save Picture
+          Save
         </button>
       </div>
     </div>
   );
 };
 
-export default ProfileSettings;
+export default ProfilePicture;
