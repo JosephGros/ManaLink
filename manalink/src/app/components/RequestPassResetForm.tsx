@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-// import { CustomLoader } from "./CustomLoading";
+import CustomLoader from "./CustomLoading";
 
 const RequestPassResetForm = () => {
   const [email, setEmail] = useState("");
@@ -65,7 +65,7 @@ const RequestPassResetForm = () => {
             <div className="w-16 h-9 content-center">
               {loading ? (
                 <div className="flex justify-center">
-                  {/* <CustomLoader /> */}
+                  <CustomLoader />
                 </div>
               ) : (
                 ""

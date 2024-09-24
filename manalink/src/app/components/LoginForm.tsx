@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
-// import { CustomLoader } from "./CustomLoading";
+import CustomLoader from "./CustomLoading";
 import eyeOpen from "../../../public/assets/eye.png";
 import eyeClosed from "../../../public/assets/eye-crossed.png";
 import Image from "next/image";
@@ -143,7 +143,7 @@ const LoginForm = () => {
   return (
     <>
       <div className="flex justify-center">
-        <div className="flex flex-col w-96 p-4 rounded-md bg-bg2 justify-center items-center">
+        <div className="flex flex-col w-4/5 max-w-96 p-4 rounded-md bg-bg2 justify-center items-center">
           <h1 className="font-bold italic text-textcolor text-4xl pb-6">
             Login
           </h1>
@@ -199,7 +199,7 @@ const LoginForm = () => {
                 <div className="w-16 h-9 content-center">
                   {loading ? (
                     <div className="flex justify-center">
-                      {/* <CustomLoader /> */}
+                      <CustomLoader />
                     </div>
                   ) : (
                     ""
@@ -246,7 +246,7 @@ const LoginForm = () => {
                 <div className="w-16 h-9 self-end">
                   {loading ? (
                     <div className="flex justify-center">
-                      {/* <CustomLoader /> */}
+                      <CustomLoader />
                     </div>
                   ) : (
                     ""

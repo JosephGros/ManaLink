@@ -1,11 +1,19 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
+interface ProfilePictureProps {
+  initialPicture: string;
+  onPictureChange: (newPicture: string) => void;
+  onEditStatus: (editStatus: boolean) => void;
+}
 
-const ProfilePicture = () => {
-  const [selectedPicture, setSelectedPicture] = useState(
-    "/assets/profile-pics/default-avatar.png"
-  );
+const ProfilePicture: React.FC<ProfilePictureProps> = ({
+  initialPicture,
+  onPictureChange,
+  onEditStatus,
+}) => {
+  const [selectedPicture, setSelectedPicture] =
+    useState<string>(initialPicture);
 
   const presetImages = Array.from({ length: 54 }, (_, i) => {
     return `/assets/profile-pics/avatar${i + 1}.png`;
@@ -34,27 +42,33 @@ const ProfilePicture = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="flex flex-col w-96 p-4 justify-center items-center">
+      <div className="flex flex-col w-fit justify-center items-center">
         <h1 className="font-bold italic text-textcolor text-2xl pb-6">
-          Select Profile Picture
+          Change Image
         </h1>
-        <div className="w-96 h-64 overflow-y-scroll p-2 shadow-[inset_0_2px_4px_rgba(42,42,42,1),inset_0_-2px_4px_rgba(42,42,42,1)] rounded-md"> 
+        <div className="w-fit h-64 overflow-y-scroll p-2 shadow-[inset_0_2px_4px_rgba(42,42,42,1),inset_0_-2px_4px_rgba(42,42,42,1)] rounded-md">
           <div className="flex flex-wrap justify-center">
             {presetImages.map((image) => (
               <div
                 key={image}
-                onClick={() => setSelectedPicture(image)}
+                onClick={() => {
+                  setSelectedPicture(image), onPictureChange(image);
+                }}
                 className={`cursor-pointer p-1 rounded-full ${
-                  selectedPicture === image ? "border-inset border-light-btn" : ""
+                  selectedPicture === image
+                    ? "border-inset border-light-btn"
+                    : ""
                 }`}
               >
                 <Image
                   src={image}
                   alt="Avatar"
-                  width={112}
-                  height={112}
+                  width={98}
+                  height={98}
                   className={`w-28 h-28 rounded-full border-4 ${
-                    selectedPicture === image ? "border-inset border-logo" : "border-icon"
+                    selectedPicture === image
+                      ? "border-inset border-logo"
+                      : "border-icon"
                   }`}
                 />
               </div>
@@ -62,7 +76,10 @@ const ProfilePicture = () => {
           </div>
         </div>
         <button
-          onClick={handleUpdateProfilePicture}
+          onClick={() => {
+            handleUpdateProfilePicture();
+            onEditStatus(false);
+          }}
           className="mt-4 w-28 h-9 bg-light-btn rounded-md text-nav font-bold italic shadow-lg"
         >
           Save

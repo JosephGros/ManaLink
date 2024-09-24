@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-// import { CustomLoader } from "./CustomLoading";
+import CustomLoader from "./CustomLoading";
 import eyeOpen from "../../../public/assets/eye.png";
 import eyeClosed from "../../../public/assets/eye-crossed.png";
 import Image from "next/image";
@@ -108,7 +108,7 @@ const ResetPasswordForm = () => {
             <div className="w-16 h-9 content-center">
               {loading ? (
                 <div className="flex justify-center">
-                  {/* <CustomLoader /> */}
+                  <CustomLoader />
                 </div>
               ) : (
                 ""

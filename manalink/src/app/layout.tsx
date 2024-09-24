@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import Navbar from "./components/Navbar";
 
 const APP_NAME = "ManaLink";
 const APP_DEFAULT_TITLE = "ManaLink";
@@ -55,7 +56,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head />
-      <body className="flex min-h-screen flex-col justify-center font-robotoMono h-screen bg-background">{children}</body>
+      <body className="flex h-screen flex-col justify-center font-robotoMono bg-background">
+        <main className="flex-grow min-h-screen flex-col items-center justify-between content-center">{children}</main>
+        <Navbar />
+      </body>
     </html>
   );
 }

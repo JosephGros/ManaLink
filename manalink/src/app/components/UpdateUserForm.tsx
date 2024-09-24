@@ -1,10 +1,11 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-// import { CustomLoader } from "./CustomLoading";
+import CustomLoader from "./CustomLoading";
 import eyeOpen from "../../../public/assets/eye.png";
 import eyeClosed from "../../../public/assets/eye-crossed.png";
 import Image from "next/image";
+import LogoutButton from "./LogoutBtn";
 
 const UpdateUserForm = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -78,6 +79,33 @@ const UpdateUserForm = () => {
     }
   };
 
+  const handleDelete = async () => {
+    if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      setLoading(true);
+      try {
+        const response = await fetch("/api/delete-user", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId, currentPassword }),
+        });
+
+        if (response.ok) {
+          setMessage("Account deleted successfully.");
+          router.push("/");
+        } else {
+          const data = await response.json();
+          setError(data.error || "Failed to delete account.");
+        }
+      } catch (error) {
+        setError("An unexpected error occurred. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -85,8 +113,8 @@ const UpdateUserForm = () => {
   return (
     <>
       <div className="flex justify-center">
-        <div className="flex flex-col w-96 p-4 rounded-md bg-bg2 justify-center items-center">
-          <h1 className="font-bold italic text-textcolor text-4xl pb-6">
+        <div className="flex flex-col w-96 p-4 rounded-md justify-center items-center">
+          <h1 className="font-bold italic text-textcolor text-3xl pb-6">
             Update Profile
           </h1>
           <form onSubmit={handleUpdate}>
@@ -98,7 +126,7 @@ const UpdateUserForm = () => {
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Password"
                   required
-                  className="w-full h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2 pr-10"
+                  className="w-full h-10 bg-input bg-opacity-20 rounded-md text-sm text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2 pr-10"
                 />
                 <button
                   type="button"
@@ -120,7 +148,7 @@ const UpdateUserForm = () => {
                 value={newUsername}
                 onChange={(e) => setNewUsername(e.target.value)}
                 placeholder="New Username (optional)"
-                className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2"
+                className="w-56 h-10 bg-input bg-opacity-20 rounded-md text-sm text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2"
               />
             </div>
             <div className="flex justify-center">
@@ -129,7 +157,7 @@ const UpdateUserForm = () => {
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
                 placeholder="New Email (optional)"
-                className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2"
+                className="w-56 h-10 bg-input bg-opacity-20 rounded-md text-sm text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2"
               />
             </div>
             <div className="flex justify-center">
@@ -138,7 +166,7 @@ const UpdateUserForm = () => {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="New Password (optional)"
-                className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2"
+                className="w-56 h-10 bg-input bg-opacity-20 rounded-md text-sm text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2"
               />
             </div>
             <div className="flex justify-center">
@@ -148,7 +176,7 @@ const UpdateUserForm = () => {
                 onChange={(e) => setTwoFactorCode(e.target.value)}
                 placeholder="2FA Code"
                 required
-                className="w-56 h-10 bg-input bg-opacity-20 rounded-md placeholde:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2"
+                className="w-56 h-10 bg-input bg-opacity-20 rounded-md text-sm placeholder: text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2"
               />
             </div>
             <div className="flex flex-col justify-center items-center w-96 pt-4">
@@ -158,10 +186,18 @@ const UpdateUserForm = () => {
               >
                 Update
               </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="mt-4 w-40 h-9 bg-red-900 rounded-md text-white font-bold italic shadow-lg"
+              >
+                Delete Account
+              </button>
+              <LogoutButton />
               <div className="w-16 h-9 items-center content-center">
                 {loading ? (
                   <div className="flex justify-center">
-                    {/* <CustomLoader /> */}
+                    <CustomLoader />
                   </div>
                 ) : (
                   ""

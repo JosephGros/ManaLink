@@ -1,8 +1,9 @@
 "use client";
 import { calculateRequiredXP } from "@/lib/xpConstants";
 import { useEffect, useState } from "react";
-// import { CustomLoader } from "../components/CustomLoading";
 import Image from "next/image";
+import BackButton from "../components/BackBtn";
+import CustomLoader from "../components/CustomLoading";
 
 const Profile = () => {
   const [user, setUser] = useState<any>(null);
@@ -50,11 +51,7 @@ const Profile = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center">
-        {/* <CustomLoader /> */}
-      </div>
-    );
+    return <div className="flex justify-center"><CustomLoader /></div>;
   }
 
   if (!user) return <div>No user data available</div>;
@@ -67,104 +64,127 @@ const Profile = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="flex items-center flex-col w-96 h-screen p-4 pt-28">
-        <div>
-          <Image
-            src={
-              user.profilePicture || "/assets/profile-pics/default-avatar.png"
-            }
-            alt="Profile picture"
-            width={160}
-            height={160}
-            className="w-40 h-40 rounded-full object-cover mb-4"
-          />
-          <a href="/user-settings">Settings</a>
-        </div>
-        <h1 className="font-bold italic text-textcolor text-2xl pb-4">
-          {user.username}
-        </h1>
-        <div className="flex flex-row justify-evenly w-96 mb-4">
-          <div className="">
+      <div className="flex flex-col items-center rounded-md bg-bg2 w-4/5 max-w-96 p-4">
+      <div>
+        <div className="flex flex-row justify-between items-center">
+          <BackButton label="Back" className="text-textcolor rounded-md w-12" />
+          <a href="/user-settings">
             <Image
-              src={xpImage}
-              alt="XP Level"
-              width={23}
-              height={23}
-              className="absolute"
+              src="/assets/Icons/IconColor/user-gear_2.png"
+              alt="Settings Icon"
+              width={20}
+              height={20}
+            />
+          </a>
+        </div>
+        <div className="flex flex-col justify-center items-center">
+          <div>
+            <Image
+              src={
+                user.profilePicture || "/assets/profile-pics/default-avatar.png"
+              }
+              alt="Profile picture"
+              width={160}
+              height={160}
+              className="w-40 h-40 rounded-full object-cover mb-4"
             />
           </div>
-          <div className="w-72 bg-progressbar rounded-md h-6 relative shadow-md">
-            <div
-              className="bg-btn h-6 rounded-l-md flex items-center justify-center text-white text-sm font-bold"
-              style={{ width: `${progressPercentage}%` }}
+          <h1 className="font-bold italic text-textcolor text-2xl pb-4">
+            {user.username}
+          </h1>
+          <div className="flex justify-center">
+            <div className="flex flex-row mb-4">
+                <Image
+                  src={xpImage}
+                  alt="XP Level"
+                  width={23}
+                  height={23}
+                  className="mr-2"
+                />
+              <div className="w-64 bg-progressbar rounded-md h-6 relative shadow-md">
+                <div
+                  className="bg-btn h-6 rounded-l-md flex items-center justify-center text-white text-sm font-bold"
+                  style={{ width: `${progressPercentage}%` }}
+                >
+                  <span className="absolute inset-0 flex items-center justify-center text-nav">
+                    Lvl {user.level} - {currentXP}/{nextLevelXP} XP
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col w-full">
+            <div className="mt-4 font-bold italic text-textcolor text-lg">
+              <div className="flex items-center mb-5 ml-2">
+                <Image
+                  src="/assets/Icons/IconColor/users.png"
+                  alt="Friends Icon"
+                  width={28}
+                  height={28}
+                  className="mr-4"
+                />
+                <a href="" className="text-base font-bold italic">
+                  {user.friends.length} - Friends
+                </a>
+              </div>
+              <div className="flex items-center mb-5 ml-2">
+                <Image
+                  src="/assets/Icons/IconColor/trophy-star.png"
+                  alt="Achievements Icon"
+                  width={28}
+                  height={28}
+                  className="mr-4"
+                />
+                <a href="" className="text-base font-bold italic">
+                  {user.achievements.length} - Achievements
+                </a>
+              </div>
+              <div className="flex items-center mb-5 ml-2">
+                <Image
+                  src="/assets/Icons/IconColor/dice-d20_1.png"
+                  alt="Playgroups Icon"
+                  width={28}
+                  height={28}
+                  className="mr-4"
+                />
+                <a href="" className="text-base font-bold italic">
+                  {user.playgroups.length} - Playgroups
+                </a>
+              </div>
+              <div className="flex items-center mb-5 ml-2">
+                <Image
+                  src="/assets/Icons/IconColor/medal.png"
+                  alt="Wins Icon"
+                  width={28}
+                  height={28}
+                  className="mr-4"
+                />
+                <a href="" className="text-base font-bold italic">
+                  {user.gamesWon} - Wins
+                </a>
+              </div>
+              <div className="flex items-center mb-5 ml-2">
+                <Image
+                  src="/assets/Icons/IconColor/book-dead12.png"
+                  alt="Games Played Icon"
+                  width={28}
+                  height={28}
+                  className="mr-4"
+                />
+                <a href="" className="text-base font-bold italic">
+                  {user.gamesPlayed} - Games Played
+                </a>
+              </div>
+            </div>
+            <button
+              onClick={() => addXP(200)}
+              className="bg-blue-500 text-white px-4 py-2 mt-4 rounded-md"
             >
-              <span className="absolute inset-0 flex items-center justify-center text-nav">
-                Lvl {user.level} - {currentXP}/{nextLevelXP} XP
-              </span>
-            </div>
+              Add 200 XP
+            </button>
           </div>
         </div>
-        <div className="flex flex-col w-96 p-2 rounded-md bg-bg2">
-          <div className="mt-4 font-bold italic text-textcolor text-lg">
-            <div className="flex items-center mb-5 ml-2">
-              <Image
-                src="/assets/Icons/IconColor/users.png"
-                alt="Friends Icon"
-                width={32}
-                height={32}
-                className="w-8 h-8 mr-4"
-              />
-              <a href="">{user.friends.length} - Friends</a>
-            </div>
-            <a href=""></a>
-            <div className="flex items-center mb-5 ml-2">
-              <Image
-                src="/assets/Icons/IconColor/trophy-star.png"
-                alt="Achievements Icon"
-                width={32}
-                height={32}
-                className="w-8 h-8 mr-4"
-              />
-              <a href="">{user.achievements.length} - Achievements</a>
-            </div>
-            <div className="flex items-center mb-5 ml-2">
-              <Image
-                src="/assets/Icons/IconColor/dice-d20_1.png"
-                alt="Playgroups Icon"
-                width={32}
-                height={32}
-                className="w-8 h-8 mr-4"
-              />
-              <a href="">{user.playgroups.length} - Playgroups</a>
-            </div>
-            <div className="flex items-center mb-5 ml-2">
-              <Image
-                src="/assets/Icons/IconColor/medal.png"
-                alt="Wins Icon"
-                width={32}
-                height={32}
-                className="w-8 h-8 mr-4"
-              />
-              <a href="">{user.gamesWon} - Wins</a>
-            </div>
-            <div className="flex items-center mb-5 ml-2">
-              <Image
-                src="/assets/Icons/IconColor/book-dead12.png"
-                alt="Games Played Icon"
-                width={32}
-                height={32}
-                className="w-8 h-8 mr-4"
-              />
-              <a href="">{user.gamesPlayed} - Games Played</a>
-            </div>
-          </div>
-          <button
-            onClick={() => addXP(200)}
-            className="bg-blue-500 text-white px-4 py-2 mt-4 rounded-md"
-          >
-            Add 200 XP
-          </button>
-        </div>
+      </div>
       </div>
     </div>
   );

@@ -2,13 +2,15 @@
 import { useEffect, useState } from "react";
 import ProfilePicture from "../components/ProfilePicture";
 import UpdateUserForm from "../components/UpdateUserForm";
-// import { CustomLoader } from "../components/CustomLoading";
+import CustomLoader from "../components/CustomLoading";
 import Image from "next/image";
+import BackButton from "../components/BackBtn";
 
 const UserSettingsPage = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isEditingPicture, setIsEditingPicture] = useState(false);
+  const [currentPicture, setCurrentPicture] = useState<string>("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -16,6 +18,7 @@ const UserSettingsPage = () => {
         const response = await fetch("/api/user-profile");
         const data = await response.json();
         setUser(data.user);
+        setCurrentPicture(data.user.profilePicture || "/assets/profile-pics/default-avatar.png");
       } catch (error) {
         console.error("Failed to load user", error);
       } finally {
@@ -29,7 +32,7 @@ const UserSettingsPage = () => {
   if (loading) {
     return (
       <div className="flex justify-center">
-        {/* <CustomLoader /> */}
+        <CustomLoader />
       </div>
     );
   }
@@ -38,15 +41,22 @@ const UserSettingsPage = () => {
     return <div>No user data available</div>;
   }
 
+  const handlePictureChange = (newPicture: string) => {
+    setCurrentPicture(newPicture);
+  };
+
+  const handleEditStatus = (editStatus: boolean) => {
+    setIsEditingPicture(editStatus);
+  }
+
   return (
     <div className="flex justify-center">
-      <div className="rounded-md bg-bg2 flex flex-col w-96 p-4">
+      <div className="rounded-md bg-bg2 flex flex-col w-4/5 max-w-96 h-[632px] p-4">
+      <BackButton label="Back" className="text-textcolor rounded-md w-12"/>
         <div className="flex flex-col justify-center items-center">
             <div className="relative group w-40 h-40 mb-4">
             <Image
-                src={
-                user.profilePicture || "/assets/profile-pics/default-avatar.png"
-                }
+                src={currentPicture}
                 alt="Profile picture"
                 layout="fill"
                 className="w-full h-full rounded-full object-cover"
@@ -60,8 +70,15 @@ const UserSettingsPage = () => {
                 </button>
                 </div>
             </div>
-            {isEditingPicture && <ProfilePicture />}
+            {isEditingPicture ? (
+            <ProfilePicture
+              initialPicture={currentPicture}
+              onPictureChange={handlePictureChange}
+              onEditStatus={handleEditStatus}
+            />
+          ) : (
             <UpdateUserForm />
+          )}
         </div>
       </div>
     </div>

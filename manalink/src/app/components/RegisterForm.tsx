@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-// import { CustomLoader } from "./CustomLoading";
+import CustomLoader from "./CustomLoading";
 import eyeOpen from "../../../public/assets/eye.png";
 import eyeClosed from "../../../public/assets/eye-crossed.png";
 import Image from "next/image";
@@ -161,7 +161,7 @@ const RegisterForm = () => {
   return (
     <>
       <div className="flex justify-center">
-        <div className="flex flex-col w-96 p-4 rounded-md bg-bg2 justify-center items-center">
+        <div className="flex flex-col w-4/5 max-w-96 p-4 rounded-md bg-bg2 justify-center items-center">
           <h1 className="font-bold italic text-textcolor text-4xl pb-6">
             Register
           </h1>
@@ -242,14 +242,14 @@ const RegisterForm = () => {
               />
             </div>
 
-            <div className="flex flex-row justify-evenly w-96 pt-6">
+            <div className="flex flex-row justify-evenly w-4/5 max-w-96 pt-6">
               <button className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold italic shadow-lg">
                 <a href="/login">Login</a>
               </button>
               <div className="w-16 h-9 content-center">
                 {loading ? (
                   <div className="flex justify-center">
-                    {/* <CustomLoader /> */}
+                    <CustomLoader />
                   </div>
                 ) : (
                   ""
