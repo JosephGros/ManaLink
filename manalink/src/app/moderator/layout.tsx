@@ -24,7 +24,7 @@ async function AdminAndModeratorLayout({ children }: { children: React.ReactNode
 
   } catch (error: any) {
     console.error('Token verification failed:', error.message);
-    return redirect('/home');
+    return redirect('/');
   }
 
   if (decodedToken.role !== 'admin' && decodedToken.role !== 'moderator') {

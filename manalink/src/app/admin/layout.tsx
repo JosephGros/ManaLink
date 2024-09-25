@@ -20,7 +20,7 @@ async function AdminLayout({ children }: { children: React.ReactNode }) {
 
   } catch (error:any) {
         console.error('Error verifying token:', error.message);
-        return redirect('/home');
+        return redirect('/');
   }
 
 

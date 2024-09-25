@@ -60,7 +60,7 @@ const ResetPasswordForm = () => {
   return (
     <div className="flex justify-center">
       <div className="flex flex-col w-96 p-4 rounded-md bg-bg2 justify-center items-center">
-        <h1 className="font-bold italic text-textcolor text-4xl pb-6">
+        <h1 className="font-bold text-textcolor text-4xl pb-6">
           Reset Password
         </h1>
         <form onSubmit={handleSubmit}>
@@ -101,7 +101,7 @@ const ResetPasswordForm = () => {
           <div className="flex flex-col items-center w-96 pt-4">
             <button
               type="submit"
-              className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold italic shadow-lg"
+              className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold shadow-lg"
             >
               Submit
             </button>

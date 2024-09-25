@@ -4,10 +4,13 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import BackButton from "../components/BackBtn";
 import CustomLoader from "../components/CustomLoading";
+import { useRouter } from 'next/navigation';
 
 const Profile = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -54,7 +57,7 @@ const Profile = () => {
     return <div className="flex justify-center"><CustomLoader /></div>;
   }
 
-  if (!user) return <div>No user data available</div>;
+  if (!user) return router.push('/');
 
   const currentXP = user.xp;
   const nextLevelXP = calculateRequiredXP(user.level + 1);
@@ -89,7 +92,7 @@ const Profile = () => {
               className="w-40 h-40 rounded-full object-cover mb-4"
             />
           </div>
-          <h1 className="font-bold italic text-textcolor text-2xl pb-4">
+          <h1 className="font-bold text-textcolor text-2xl pb-4">
             {user.username}
           </h1>
           <div className="flex justify-center">
@@ -114,7 +117,7 @@ const Profile = () => {
             </div>
           </div>
           <div className="flex flex-col w-full">
-            <div className="mt-4 font-bold italic text-textcolor text-lg">
+            <div className="mt-4 font-bold text-textcolor text-lg">
               <div className="flex items-center mb-5 ml-2">
                 <Image
                   src="/assets/Icons/IconColor/users.png"
@@ -123,7 +126,7 @@ const Profile = () => {
                   height={28}
                   className="mr-4"
                 />
-                <a href="" className="text-base font-bold italic">
+                <a href="" className="text-base font-bold">
                   {user.friends.length} - Friends
                 </a>
               </div>
@@ -135,7 +138,7 @@ const Profile = () => {
                   height={28}
                   className="mr-4"
                 />
-                <a href="" className="text-base font-bold italic">
+                <a href="" className="text-base font-bold">
                   {user.achievements.length} - Achievements
                 </a>
               </div>
@@ -147,7 +150,7 @@ const Profile = () => {
                   height={28}
                   className="mr-4"
                 />
-                <a href="" className="text-base font-bold italic">
+                <a href="" className="text-base font-bold">
                   {user.playgroups.length} - Playgroups
                 </a>
               </div>
@@ -159,7 +162,7 @@ const Profile = () => {
                   height={28}
                   className="mr-4"
                 />
-                <a href="" className="text-base font-bold italic">
+                <a href="" className="text-base font-bold">
                   {user.gamesWon} - Wins
                 </a>
               </div>
@@ -171,7 +174,7 @@ const Profile = () => {
                   height={28}
                   className="mr-4"
                 />
-                <a href="" className="text-base font-bold italic">
+                <a href="" className="text-base font-bold">
                   {user.gamesPlayed} - Games Played
                 </a>
               </div>

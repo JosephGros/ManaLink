@@ -162,7 +162,7 @@ const RegisterForm = () => {
     <>
       <div className="flex justify-center">
         <div className="flex flex-col w-4/5 max-w-96 p-4 rounded-md bg-bg2 justify-center items-center">
-          <h1 className="font-bold italic text-textcolor text-4xl pb-6">
+          <h1 className="font-bold text-textcolor text-4xl pb-6">
             Register
           </h1>
 
@@ -242,8 +242,8 @@ const RegisterForm = () => {
               />
             </div>
 
-            <div className="flex flex-row justify-evenly w-4/5 max-w-96 pt-6">
-              <button className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold italic shadow-lg">
+            <div className="flex flex-row justify-evenly w-full max-w-96 pt-6">
+              <button className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold shadow-lg">
                 <a href="/login">Login</a>
               </button>
               <div className="w-16 h-9 content-center">
@@ -257,7 +257,7 @@ const RegisterForm = () => {
               </div>
               <button
                 type="submit"
-                className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold italic shadow-lg"
+                className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold shadow-lg"
               >
                 Register
               </button>

@@ -5,12 +5,15 @@ import UpdateUserForm from "../components/UpdateUserForm";
 import CustomLoader from "../components/CustomLoading";
 import Image from "next/image";
 import BackButton from "../components/BackBtn";
+import { useRouter } from "next/navigation";
 
 const UserSettingsPage = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isEditingPicture, setIsEditingPicture] = useState(false);
   const [currentPicture, setCurrentPicture] = useState<string>("");
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -38,7 +41,7 @@ const UserSettingsPage = () => {
   }
 
   if (!user) {
-    return <div>No user data available</div>;
+    return router.push('/');
   }
 
   const handlePictureChange = (newPicture: string) => {
@@ -51,7 +54,7 @@ const UserSettingsPage = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="rounded-md bg-bg2 flex flex-col w-4/5 max-w-96 h-[632px] p-4">
+      <div className="rounded-md bg-bg2 flex flex-col w-4/5 max-w-96 p-4">
       <BackButton label="Back" className="text-textcolor rounded-md w-12"/>
         <div className="flex flex-col justify-center items-center">
             <div className="relative group w-40 h-40 mb-4">

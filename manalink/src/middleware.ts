@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 
-const protectedRoutes = ['/home'];
+const protectedRoutes = ['/'];
 
 export function middleware(req: NextRequest) {
 
@@ -14,7 +14,7 @@ export function middleware(req: NextRequest) {
       );
     
     if (isProtectedRoute && !token) {
-        return NextResponse.redirect(new URL('/login', req.url));
+        return NextResponse.redirect(new URL('/start', req.url));
     }
     
     if (token && (req.nextUrl.pathname === '/login' || req.nextUrl.pathname === '/register')) {
@@ -25,5 +25,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/home/:path*'],
+    matcher: ['//:path*'],
   };

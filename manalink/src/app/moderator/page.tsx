@@ -9,7 +9,7 @@ export default function AdminPage() {
         <p className="text-textcolor">This content is for admins and moderators only.</p>
 
         <button className="bg-btn text-textcolor p-2 rounded-md mt-4">
-            <a href="/home">Home</a>
+            <a href="/">Home</a>
         </button>
     </div>
   );

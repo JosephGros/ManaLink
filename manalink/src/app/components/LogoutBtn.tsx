@@ -34,7 +34,7 @@ const LogoutButton = () => {
       {error && <p style={{ color: "red" }}>{error}</p>}
       <button
         onClick={handleLogout}
-        className="bg-red-500 text-white py-2 px-4 rounded-md"
+        className="bg-btn text-nav rounded-md w-28 h-9 font-bold shadow-lg"
         disabled={loading}
       >
         {loading ? "Logging out..." : "Logout"}

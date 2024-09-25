@@ -17,7 +17,9 @@ const config: Config = {
         nav: "#003135",
         background: "#2A2A2A",
         input: "#FFFFFF",
-        bg2: "#4F4F4F"
+        bg2: "#4F4F4F",
+        danger: "#590808",
+        danger2: "#8b1c00"
       },
       backgroundImage: {
         'light-btn': "linear-gradient(to bottom, #B4E3E3, #77D7D7)",

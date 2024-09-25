@@ -56,8 +56,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head />
-      <body className="flex h-screen flex-col justify-center font-robotoMono bg-background">
-        <main className="flex-grow min-h-screen flex-col items-center justify-between content-center">{children}</main>
+      <body className="flex flex-col h-full min-h-screen bg-background font-robotoMono">
+        <main className="flex-grow content-center mb-16 overflow-y-auto scroll-smooth">{children}</main>
         <Navbar />
       </body>
     </html>
