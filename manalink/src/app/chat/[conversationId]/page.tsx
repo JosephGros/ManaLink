@@ -15,9 +15,6 @@ const DMChatPage = async ({
     const { conversationId } = params;
     const { otherUserId } = searchParams;
 
-  console.log('Im conversation ID : ', conversationId);
-  console.log('Im the other user : ', otherUserId);
-
   const cookieStore = cookies();
   const token = cookieStore.get("token")?.value;
 
@@ -35,13 +32,19 @@ const DMChatPage = async ({
 
   return (
     <div>
-      <h1>Direct Message Chat</h1>
-      <Chat
-        dmId={conversationId}
-        currentUserId={currentUserId}
-        otherUserId={otherUserId}
-        messageType="user"
-      />
+      <div className="fixed top-0 left-0 right-0 h-14 w-full bg-background flex justify-center items-center z-10 border-b-2 border-bg3">
+        <h1 className="text-3xl font-bold text-center text-textcolor">Direct Message</h1>
+      </div>
+      <div className="fixed top-14 left-0 right-0 bottom-[120px]">
+        <div className="w-full h-full flex flex-col overflow-auto ">
+            <Chat
+                dmId={conversationId}
+                currentUserId={currentUserId}
+                otherUserId={otherUserId}
+                messageType="user"
+            />
+        </div>
+      </div>
     </div>
   );
 };

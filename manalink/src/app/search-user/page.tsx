@@ -1,46 +1,43 @@
-"use client";
-
-import { useSearchParams } from "next/navigation";
 import UserSearch from "../components/SearchUser";
-import { useEffect, useState } from "react";
 import CustomLoader from "../components/CustomLoading";
+import { cookies } from "next/headers";
+interface SearchUsersProps {
+    searchParams: { playgroupId: string };
+  }
 
-const SearchUsers = () => {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  const searchParams = useSearchParams();
-  const playgroupId = searchParams.get("playgroupId");
+export default async function SearchUsers({ searchParams }: SearchUsersProps) {
+  const playgroupId = searchParams?.playgroupId;
 
   if (!playgroupId) {
     return <div>Error: Playgroup ID is missing</div>;
   }
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await fetch("/api/user-profile");
-        const data = await response.json();
-        setUser(data.user);
-      } catch (error) {
-        console.error("Failed to load user", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const cookieStore = cookies();
+  const token = cookieStore.get("token")?.value;
 
-    fetchUser();
-  }, []);
-
-  if (loading) {
-    return <div className="flex justify-center"><CustomLoader /></div>;
+  if (!token) {
+    return <div>Error: User not authenticated</div>;
   }
+
+  const userResponse = await fetch(`${process.env.BASE_URL}/api/user-info`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+  });
+
+  const userData = await userResponse.json();
+
+  if (!userData?.userId) {
+    return <div>Error: Failed to retrieve user data</div>;
+  }
+
+  const user = userData.userId;
 
   return (
     <div>
-      <UserSearch inviterId={user._id} playgroupId={playgroupId} />
+      <UserSearch inviterId={userData.userId} playgroupId={playgroupId} />
     </div>
   );
-};
-
-export default SearchUsers;
+}

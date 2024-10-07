@@ -56,11 +56,13 @@ const ChatMessage = ({
         <div className="invite-actions">
           <button
             onClick={() => handleAcceptInvite(message.metadata!.inviteId!)}
+            className="bg-btn text-nav w-10 h-10"
           >
             Accept
           </button>
           <button
             onClick={() => handleDeclineInvite(message.metadata!.inviteId!)}
+            className="bg-btn text-nav w-10 h-10"
           >
             Decline
           </button>

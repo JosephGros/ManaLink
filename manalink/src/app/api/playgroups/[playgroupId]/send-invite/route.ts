@@ -42,7 +42,7 @@ export async function POST(req: Request, { params }: { params: { playgroupId: st
         });
         await newInvite.save();
 
-        const inviteMessage = `You have been invited to join the playgroup "${playgroup.name}". Accept or decline.`;
+        const inviteMessage = `You have been invited to join the playgroup "${playgroup.name}".`;
 
         const message = new Message({
             content: inviteMessage,

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongoose';
 import Invite from '@/models/Invite';
 import Playgroup from '@/models/Playgroup';
+import Message from '@/models/Message';
 
 export async function POST(req: Request, { params }: { params: { inviteId: string } }) {
     const { inviteId } = params;
@@ -35,15 +36,23 @@ export async function POST(req: Request, { params }: { params: { inviteId: strin
             invite.status = 'accepted';
             await invite.save();
 
-            return NextResponse.json({ message: 'Invite accepted', playgroup }, { status: 200 });
+            await Invite.findByIdAndDelete(inviteId);
+            await Message.findOneAndDelete({ "metadata.inviteId": inviteId });
+
+            return NextResponse.json({ message: 'Invite accepted and removed', playgroup }, { status: 200 });
         } else if (response === 'decline') {
             invite.status = 'declined';
             await invite.save();
-            return NextResponse.json({ message: 'Invite declined' }, { status: 200 });
+
+            await Invite.findByIdAndDelete(inviteId);
+            await Message.findOneAndDelete({ "metadata.inviteId": inviteId });
+
+            return NextResponse.json({ message: 'Invite declined and removed' }, { status: 200 });
         } else {
             return NextResponse.json({ message: 'Invalid response' }, { status: 400 });
         }
     } catch (error: any) {
+        console.error("Error responding to invite:", error);
         return NextResponse.json({ message: 'Server Error', error: error.message }, { status: 500 });
     }
 }
