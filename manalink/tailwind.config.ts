@@ -18,6 +18,7 @@ const config: Config = {
         background: "#2A2A2A",
         input: "#FFFFFF",
         bg2: "#4F4F4F",
+        bg3: "#3D3C3C",
         danger: "#590808",
         danger2: "#8b1c00"
       },

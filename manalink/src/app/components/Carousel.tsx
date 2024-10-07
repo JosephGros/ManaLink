@@ -78,13 +78,13 @@ const Carousel = () => {
       </div>
       <button
         onClick={handlePrev}
-        className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-btn rounded-full p-2 shadow hover:bg-light-btn"
+        className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-btn rounded-full p-2 shadow hover:bg-light-btn opacity-25"
       >
         ❮
       </button>
       <button
         onClick={handleNext}
-        className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-btn rounded-full p-2 shadow hover:bg-light-btn"
+        className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-btn rounded-full p-2 shadow hover:bg-light-btn opacity-25"
       >
         ❯
       </button>

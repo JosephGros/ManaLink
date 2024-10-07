@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import CustomLoader from "./CustomLoading";
 
 const LogoutButton = () => {
   const [loading, setLoading] = useState(false);
@@ -37,7 +38,7 @@ const LogoutButton = () => {
         className="bg-btn text-nav rounded-md w-28 h-9 font-bold shadow-lg"
         disabled={loading}
       >
-        {loading ? "Logging out..." : "Logout"}
+        {loading ? <CustomLoader /> : "Logout"}
       </button>
     </div>
   );

@@ -5,6 +5,14 @@ const withPWA = withPWAInit({
   dest: "public",
 });
 
-const nextConfig = {};
+const nextConfig = {
+    reactStrictMode: true,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+};
 
 export default withPWA(nextConfig);

@@ -84,7 +84,7 @@ const Profile = () => {
           <div>
             <Image
               src={
-                user.profilePicture || "/assets/profile-pics/default-avatar.png"
+                user.profilePicture || "/assets/profile-pics/mtg.webp"
               }
               alt="Profile picture"
               width={160}
@@ -92,9 +92,12 @@ const Profile = () => {
               className="w-40 h-40 rounded-full object-cover mb-4"
             />
           </div>
-          <h1 className="font-bold text-textcolor text-2xl pb-4">
+          <h1 className="font-bold text-textcolor text-2xl truncate max-w-72">
             {user.username}
           </h1>
+          <p className="text-textcolor text-md pb-4">
+            #{user.userCode}
+          </p>
           <div className="flex justify-center">
             <div className="flex flex-row mb-4">
                 <Image

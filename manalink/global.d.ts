@@ -5,6 +5,7 @@ declare global {
     var mongoose: {
         Schema: any; conn: Mongoose | null, promise: Promise<Mongoose> | null 
 };
+    var _io: SocketIOServer | undefined;
 }
 
 export {};

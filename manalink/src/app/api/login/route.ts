@@ -13,6 +13,21 @@ const normalizeIp = (ip: string) => {
     }
     return ip;
 };
+interface JwtPayloadCustom {
+    id: string;
+    role: string;
+}
+
+const extendTokenExpiration = (token: string) => {
+    try {
+        const payload = jwt.verify(token, JWT_SECRET) as JwtPayloadCustom;
+        return jwt.sign({ id: payload.id, role: payload.role }, JWT_SECRET, {
+            expiresIn: "1h",
+        });
+    } catch (error) {
+        return null;
+    }
+};
 
 export async function POST(req: Request) {
     try {
@@ -38,7 +53,10 @@ export async function POST(req: Request) {
             if (knownIp) {
                 console.log("Known IP matched, skipping 2FA");
 
-                const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
+                let token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
+
+                const refreshToken = extendTokenExpiration(token);
+                if (refreshToken) token = refreshToken;
 
                 const response = NextResponse.json({ message: 'Login successful!', token }, { status: 200 });
 
@@ -56,7 +74,10 @@ export async function POST(req: Request) {
             }
         }
 
-        const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
+        let token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
+
+        const refreshToken = extendTokenExpiration(token);
+        if (refreshToken) token = refreshToken;
 
         const response = NextResponse.json({ message: 'Login successful!', token }, { status: 200 });
 
