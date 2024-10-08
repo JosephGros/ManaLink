@@ -3,15 +3,14 @@ const next = require('next');
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
-const helmet = require('helmet'); 
-
-server.use(helmet());
+const helmet = require('helmet');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const server = express();
+server.use(helmet());
 const httpServer = http.createServer(server);
 
 const io = new Server(httpServer, {

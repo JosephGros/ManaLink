@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import ChatMessage from "./ChatMessage";
 import io from "socket.io-client";
 import CustomLoader from "./CustomLoading";
 import Image from "next/image";
@@ -49,6 +48,7 @@ const Chat = ({
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const messageListRef = useRef<HTMLDivElement>(null);
   const [isFetching, setIsFetching] = useState(false);
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
 
   const MESSAGES_PER_PAGE = 50;
 
@@ -91,6 +91,8 @@ const Chat = ({
   }, [otherUserId]);
 
   const fetchMessages = async (page: number, initialLoad = false) => {
+    if (isFetching || !hasMoreMessages) return;
+    
     const endpoint =
       messageType === "user"
         ? `/api/messages/${dmId}?messageType=user&userId=${currentUserId}&page=${page}`
@@ -101,26 +103,30 @@ const Chat = ({
     const data = await response.json();
 
     if (Array.isArray(data)) {
-      if (initialLoad) {
-        setMessages(data);
-        setTimeout(() => {
-          if (chatContainerRef.current) {
-            chatContainerRef.current.scrollTop =
-              chatContainerRef.current.scrollHeight;
-          }
-        }, 100);
-      } else {
-        const previousHeight = chatContainerRef.current?.scrollHeight || 0;
-        setMessages((prevMessages) => [...data, ...prevMessages]);
-        setTimeout(() => {
-          if (chatContainerRef.current) {
-            const newHeight = chatContainerRef.current.scrollHeight;
-            chatContainerRef.current.scrollTop = newHeight - previousHeight;
-          }
-        }, 100);
+        if (data.length < MESSAGES_PER_PAGE) {
+          setHasMoreMessages(false);
+        }
+  
+        if (initialLoad) {
+          setMessages(data);
+          setTimeout(() => {
+            if (chatContainerRef.current) {
+              chatContainerRef.current.scrollTop =
+                chatContainerRef.current.scrollHeight;
+            }
+          }, 100);
+        } else {
+          const previousHeight = chatContainerRef.current?.scrollHeight || 0;
+          setMessages((prevMessages) => [...data, ...prevMessages]);
+          setTimeout(() => {
+            if (chatContainerRef.current) {
+              const newHeight = chatContainerRef.current.scrollHeight;
+              chatContainerRef.current.scrollTop = newHeight - previousHeight;
+            }
+          }, 100);
+        }
       }
-    }
-    setLoading(false);
+      setLoading(false);
     setIsFetching(false);
   };
 
@@ -206,7 +212,7 @@ const Chat = ({
   };
 
   const handleScroll = () => {
-    if (chatContainerRef.current?.scrollTop === 0) {
+    if (chatContainerRef.current?.scrollTop === 0 && hasMoreMessages && !isFetching) {
       setPage((prevPage) => prevPage + 1);
     }
   };
