@@ -22,7 +22,7 @@ interface User {
   profilePicture: string;
 }
 
-const socket = io({
+const socket = io(`${process.env.BASE_URL}`, {
   path: "/api/socket",
   transports: ["websocket"],
 });
