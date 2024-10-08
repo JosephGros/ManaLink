@@ -11,7 +11,7 @@ const handle = app.getRequestHandler();
 
 const server = express();
 
-app.use(
+server.use(
   helmet({
     contentSecurityPolicy: {
       directives: {
