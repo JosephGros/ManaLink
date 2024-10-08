@@ -1,63 +1,61 @@
-const redisAdapter = require('socket.io-redis');
-const next = require('next');
-const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
-const helmet = require('helmet');
+const redisAdapter = require("socket.io-redis");
+const next = require("next");
+const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
+const helmet = require("helmet");
 
-const dev = process.env.NODE_ENV !== 'production';
+const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const server = express();
 server.use(helmet());
 const httpServer = http.createServer(server);
+const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
 
 const io = new Server(httpServer, {
-  path: '/api/socket',
+  path: "/api/socket",
   cors: {
     origin: `${process.env.BASE_URL}`,
-    methods: ['GET', 'POST'],
+    methods: ["GET", "POST"],
     credentials: true,
   },
 });
 
-io.adapter(redisAdapter({
-    host: process.env.REDIS_HOST || 'localhost',
-    port: process.env.REDIS_PORT || 6379
-  }));
+io.adapter(redisAdapter(redisUrl));
 
 global._io = io;
 
 app.prepare().then(() => {
-  io.on('connection', (socket) => {
-    console.log('Socket.IO client connected:', socket.id);
+  io.on("connection", (socket) => {
+    console.log("Socket.IO client connected:", socket.id);
 
-    socket.on('join_dm', (dmId) => {
+    socket.on("join_dm", (dmId) => {
       socket.join(dmId);
       console.log(`User ${socket.id} joined DM: ${dmId}`);
     });
 
-    socket.on('join_group', (roomId) => {
+    socket.on("join_group", (roomId) => {
       socket.join(roomId);
       console.log(`User ${socket.id} joined Group: ${roomId}`);
     });
 
-    socket.on('send_message', (data) => {
+    socket.on("send_message", (data) => {
       const { roomId, dmId, content } = data;
       if (dmId) {
-        io.to(dmId).emit('receive_message', data);
+        io.to(dmId).emit("receive_message", data);
       } else if (roomId) {
-        io.to(roomId).emit('receive_message', data);
+        io.to(roomId).emit("receive_message", data);
       }
     });
 
-    socket.on('disconnect', () => {
-      console.log('Socket.IO client disconnected:', socket.id);
+    socket.on("disconnect", () => {
+      console.log("Socket.IO client disconnected:", socket.id);
     });
   });
 
-  server.all('*', (req, res) => {
+  server.all("*", (req, res) => {
     return handle(req, res);
   });
 

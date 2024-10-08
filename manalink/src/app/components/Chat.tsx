@@ -92,7 +92,7 @@ const Chat = ({
 
   const fetchMessages = async (page: number, initialLoad = false) => {
     if (isFetching || !hasMoreMessages) return;
-    
+
     const endpoint =
       messageType === "user"
         ? `/api/messages/${dmId}?messageType=user&userId=${currentUserId}&page=${page}`
@@ -218,13 +218,12 @@ const Chat = ({
   };
 
   useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
+    if (page > 1) {
+      fetchMessages(page);
     }
-  }, [messages]);
+  }, [page]);
 
-  if (loading) {
+  if (loading && page === 1) {
     return (
       <div className="flex justify-center">
         <CustomLoader />
