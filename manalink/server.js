@@ -19,6 +19,7 @@ server.use(
         scriptSrc: ["'self'", "'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
         objectSrc: ["'none'"],
+        connectSrc: ["'self'", "wss://mana-link.se", "https://mana-link.se"],
       },
     },
   })
