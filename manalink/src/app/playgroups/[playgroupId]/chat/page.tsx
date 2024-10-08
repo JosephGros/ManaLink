@@ -29,12 +29,20 @@ const PlaygroupChatPage = async ({
 
   return (
     <div>
-      <h1>Playgroup Chat</h1>
-      <Chat
-        roomId={playgroupId}
-        currentUserId={currentUserId}
-        messageType="group"
-      />
+      <div className="fixed top-0 left-0 right-0 h-14 w-full bg-background flex justify-center items-center z-10 border-b-2 border-bg3">
+        <h1 className="text-3xl font-bold text-center text-textcolor">
+          {playgroupId}
+        </h1>
+      </div>
+      <div className="fixed top-14 left-0 right-0 bottom-32">
+        <div className="w-full h-full flex flex-col overflow-auto">
+          <Chat
+            roomId={playgroupId}
+            currentUserId={currentUserId}
+            messageType="group"
+          />
+        </div>
+      </div>
     </div>
   );
 };

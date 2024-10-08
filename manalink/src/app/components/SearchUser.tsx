@@ -160,11 +160,11 @@ const UserSearch = ({
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Username#UserCode"
-            className="w-72 h-10 bg-input bg-opacity-20 rounded-l-md placeholder:text-textcolor placeholder:opacity-50 text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2"
+            className="w-72 h-10 mr-2 bg-input bg-opacity-20 rounded-md placeholder:text-textcolor placeholder:opacity-50 text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2"
           />
           <button
             onClick={handleSearch}
-            className="bg-btn p-2 rounded-r-md shadow-lg h-10 w-10"
+            className="bg-btn p-2 rounded-md shadow-lg h-10 w-10"
           >
             <Image src={searchIcon} alt="Search" width={24} height={24} />
           </button>

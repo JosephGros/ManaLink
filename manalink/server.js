@@ -10,14 +10,27 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const server = express();
-server.use(helmet());
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        objectSrc: ["'none'"],
+      },
+    },
+  })
+);
+
 const httpServer = http.createServer(server);
 const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
 
 const io = new Server(httpServer, {
   path: "/api/socket",
   cors: {
-    origin: `${process.env.BASE_URL}`,
+    origin: process.env.BASE_URL,
     methods: ["GET", "POST"],
     credentials: true,
   },

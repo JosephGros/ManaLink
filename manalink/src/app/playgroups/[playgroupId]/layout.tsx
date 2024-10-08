@@ -8,9 +8,13 @@ const PlaygroupLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="h-full flex flex-col">
-        <div className="flex-1 p-4 bg-gray-900 text-white">{children}</div>
+        <div className="fixed top-14 left-0 right-0 bottom-32">
+            <div className="w-full h-full flex flex-col overflow-auto">
+                {children}
+            </div>
+        </div>
 
-      <nav className="flex justify-around bg-gray-800 p-2 text-white">
+      <nav className="p-4 flex items-center border-t-2 border-bg3 fixed bottom-16 left-0 right-0 h-16 bg-background z-10">
         <Link href={`${pathname}/chat`} passHref>
           <button className="p-2">Chat</button>
         </Link>
@@ -21,7 +25,7 @@ const PlaygroupLayout = ({ children }: { children: React.ReactNode }) => {
           <button className="p-2">Calendar</button>
         </Link>
         <Link href={`${pathname}/games`} passHref>
-          <button className="p-2">Games Played</button>
+          <button className="p-2">Games Playedz</button>
         </Link>
       </nav>
     </div>

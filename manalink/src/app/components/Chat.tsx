@@ -21,7 +21,9 @@ interface User {
   profilePicture: string;
 }
 
-const socket = io(`${process.env.BASE_URL}`, {
+// `${process.env.BASE_URL}`,
+
+const socket = io(`${process.env.BASE_URL}`,{
   path: "/api/socket",
   transports: ["websocket"],
 });
@@ -49,6 +51,7 @@ const Chat = ({
   const messageListRef = useRef<HTMLDivElement>(null);
   const [isFetching, setIsFetching] = useState(false);
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
+  const [sendingMessage, setSendingMessage] = useState('');
 
   const MESSAGES_PER_PAGE = 50;
 
@@ -103,31 +106,26 @@ const Chat = ({
     const data = await response.json();
 
     if (Array.isArray(data)) {
-        if (data.length < MESSAGES_PER_PAGE) {
-          setHasMoreMessages(false);
-        }
-  
-        if (initialLoad) {
-          setMessages(data);
-          setTimeout(() => {
-            if (chatContainerRef.current) {
-              chatContainerRef.current.scrollTop =
-                chatContainerRef.current.scrollHeight;
-            }
-          }, 100);
-        } else {
-          const previousHeight = chatContainerRef.current?.scrollHeight || 0;
-          setMessages((prevMessages) => [...data, ...prevMessages]);
-          setTimeout(() => {
-            if (chatContainerRef.current) {
-              const newHeight = chatContainerRef.current.scrollHeight;
-              chatContainerRef.current.scrollTop = newHeight - previousHeight;
-            }
-          }, 100);
-        }
+      if (data.length < MESSAGES_PER_PAGE) {
+        setHasMoreMessages(false);
       }
-      setLoading(false);
+
+      if (initialLoad) {
+        setMessages(data);
+        scrollToBottom();
+      } else {
+        const previousHeight = chatContainerRef.current?.scrollHeight || 0;
+        setMessages((prevMessages) => [...data, ...prevMessages]);
+        setTimeout(() => {
+          if (chatContainerRef.current) {
+            const newHeight = chatContainerRef.current.scrollHeight;
+            chatContainerRef.current.scrollTop = newHeight - previousHeight;
+          }
+        }, 100);
+      }
+    }
     setIsFetching(false);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -196,6 +194,7 @@ const Chat = ({
       if (response.ok) {
         socket.emit("send_message", result);
         setNewMessage("");
+        setSendingMessage("mb-16");
         scrollToBottom();
       } else {
         console.error(result.error);
@@ -212,7 +211,11 @@ const Chat = ({
   };
 
   const handleScroll = () => {
-    if (chatContainerRef.current?.scrollTop === 0 && hasMoreMessages && !isFetching) {
+    if (
+      chatContainerRef.current?.scrollTop === 0 &&
+      hasMoreMessages &&
+      !isFetching
+    ) {
       setPage((prevPage) => prevPage + 1);
     }
   };
@@ -231,18 +234,16 @@ const Chat = ({
     );
   }
 
-  const bottomPadding = messageType === "group" ? "pb-24" : "pb-4";
+  const bottomPadding = messageType === "group" ? "mb-16" : "mb-0";
+  const bottomPadding2 = messageType === "group" ? "bottom-32" : "bottom-16";
 
   return (
     <div
-      className="flex-grow overflow-auto"
+      className={`flex-grow overflow-auto ${bottomPadding}`}
       ref={chatContainerRef}
       onScroll={handleScroll}
     >
-      <div
-        ref={messageListRef}
-        className={`p-4 ${bottomPadding} flex flex-col space-y-4`}
-      >
+      <div className={`p-4 ${sendingMessage} flex flex-col space-y-4`}>
         {messages.length ? (
           messages.map((msg, index) => (
             <div
@@ -324,10 +325,14 @@ const Chat = ({
         ) : (
           <p>No messages yet</p>
         )}
+        <div 
+        ref={messageEndRef} />
       </div>
-      <div className="p-4 flex items-center border-t-2 border-bg3 fixed bottom-16 left-0 right-0 h-16 bg-background z-10">
+      <div
+        className={`p-4 flex justify-center items-center border-t-2 border-bg3 fixed ${bottomPadding2} left-0 right-0 h-16 bg-background`}
+      >
         <textarea
-          className="overflow-y-auto w-9/12 resize-none bg-input bg-opacity-20 rounded-md placeholder:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2 break-words"
+          className="overflow-y-auto w-11/12 resize-none bg-input bg-opacity-20 rounded-md placeholder:text-textcolor text-textcolor my-1.5 shadow-lg focus:outline-none focus:ring focus:ring-lightaccent p-2 mr-2 break-words"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onInput={(e) => {
