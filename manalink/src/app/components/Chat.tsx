@@ -23,7 +23,7 @@ interface User {
 
 // `${process.env.BASE_URL}`,
 
-const socket = io(`${process.env.BASE_URL}`,{
+const socket = io("https://mana-link.se",{
   path: "/api/socket",
   transports: ["websocket"],
 });
