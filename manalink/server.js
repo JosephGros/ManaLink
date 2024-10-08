@@ -1,7 +1,11 @@
+const redisAdapter = require('socket.io-redis');
 const next = require('next');
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
+const helmet = require('helmet'); 
+
+server.use(helmet());
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -13,11 +17,16 @@ const httpServer = http.createServer(server);
 const io = new Server(httpServer, {
   path: '/api/socket',
   cors: {
-    origin: '*',
+    origin: `${process.env.BASE_URL}`,
     methods: ['GET', 'POST'],
     credentials: true,
   },
 });
+
+io.adapter(redisAdapter({
+    host: process.env.REDIS_HOST || 'localhost',
+    port: process.env.REDIS_PORT || 6379
+  }));
 
 global._io = io;
 
