@@ -128,9 +128,9 @@ const Chat = React.memo(
           }
 
           if (initialLoad) {
-        } else {
             setMessages(data);
             scrollToBottom();
+          } else {
             const previousHeight = chatContainerRef.current?.scrollHeight || 0;
             setMessages((prevMessages) => [...data, ...prevMessages]);
             setTimeout(() => {

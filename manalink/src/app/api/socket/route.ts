@@ -1,14 +1,15 @@
 export const dynamic = "force-dynamic";
 
-import { Server as HttpServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import { createClient } from 'redis';
 import { createAdapter } from '@socket.io/redis-adapter';
 import { NextApiRequest, NextApiResponse } from 'next';
+import jwt from 'jsonwebtoken';
 
 const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
 const pubClient = createClient({ url: redisUrl });
 const subClient = pubClient.duplicate();
+const secretKey: any = process.env.JWT_SECRET;
 
 async function setupRedis() {
     await pubClient.connect();
@@ -37,32 +38,47 @@ const initializeSocketServer = async (res: NextApiResponse) => {
 
         io.adapter(createAdapter(pubClient, subClient));
 
+
         io.on('connection', (socket) => {
-            console.log('Client connected via WebSocket');
+            const token = socket.handshake.auth?.token;
 
-            socket.on('join_dm', (dmId) => {
-                socket.join(dmId);
-                console.log(`Client joined DM room: ${dmId}`);
-            });
+            if (!token) {
+                console.log('No token provided');
+                return socket.disconnect(true);
+            }
 
-            socket.on('join_group', (roomId) => {
-                socket.join(roomId);
-                console.log(`Client joined group room: ${roomId}`);
-            });
-
-            socket.on('send_message', (msg) => {
-                if (msg.dmId) {
-                    io.to(msg.dmId).emit('receive_message', msg);
-                } else if (msg.roomId) {
-                    io.to(msg.roomId).emit('receive_message', msg);
-                } else {
-                    io.emit('receive_message', msg);
+            jwt.verify(token, secretKey, (error: any, decoded: any) => {
+                if (error) {
+                    console.log('Invalid token:', error);
+                    return socket.disconnect(true);
                 }
-                console.log('Message received:', msg);
-            });
 
-            socket.on('disconnect', () => {
-                console.log('Client disconnected');
+                console.log('Authenticated client:', decoded);
+
+                socket.on('join_dm', (dmId) => {
+                    socket.join(dmId);
+                    console.log(`Client joined DM room: ${dmId}`);
+                });
+
+                socket.on('join_group', (roomId) => {
+                    socket.join(roomId);
+                    console.log(`Client joined group room: ${roomId}`);
+                });
+
+                socket.on('send_message', (msg) => {
+                    if (msg.dmId) {
+                        io.to(msg.dmId).emit('receive_message', msg);
+                    } else if (msg.roomId) {
+                        io.to(msg.roomId).emit('receive_message', msg);
+                    } else {
+                        io.emit('receive_message', msg);
+                    }
+                    console.log('Message received:', msg);
+                });
+
+                socket.on('disconnect', () => {
+                    console.log('Client disconnected');
+                });
             });
         });
 
