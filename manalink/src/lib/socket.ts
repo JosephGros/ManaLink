@@ -1,30 +1,39 @@
 import io from 'socket.io-client';
 
-const socket = io(process.env.BASE_URL || 'http://localhost:3000', {
-  path: '/api/socket',
-  transports: ['websocket'],
-  reconnectionAttempts: 5,
-  reconnectionDelay: 1000,
-  timeout: 10000,
-  autoConnect: true,
-  secure: true,
-});
+let socket: ReturnType<typeof io> | null = null;
 
-socket.on('connect', () => {
-    console.log('Connected to Socket.IO server');
-  });
-  
-  socket.on('disconnect', (reason: any) => {
-    console.log('Disconnected:', reason);
-  });
-  
-  socket.on('connect_error', (error: any) => {
-    console.error('Connection Error:', error);
-  });
-  
-  socket.on('reconnect_attempt', () => {
-    console.log('Reconnecting...');
-  });
-  
+const getSocket = () => {
+  if (!socket) {
+    const baseURL = process.env.BASE_URL || 'http://localhost:3000';
 
-export default socket;
+    socket = io(baseURL, {
+      path: '/api/socket',
+      transports: ['websocket'],
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      timeout: 10000,
+      autoConnect: true,
+      secure: baseURL.startsWith('https'),
+    });
+
+    socket.on('connect', () => {
+      console.log('Connected to Socket.IO server');
+    });
+
+    socket.on('disconnect', (reason: string) => {
+      console.log('Disconnected:', reason);
+    });
+
+    socket.on('connect_error', (error: Error) => {
+      console.error('Connection Error:', error);
+    });
+
+    socket.on('reconnect_attempt', () => {
+      console.log('Reconnecting...');
+    });
+  }
+
+  return socket;
+};
+
+export default getSocket;

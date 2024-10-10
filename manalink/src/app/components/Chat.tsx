@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import io from "socket.io-client";
 import CustomLoader from "./CustomLoading";
 import Image from "next/image";
+import getSocket from "@/lib/socket";
 
 interface Message {
   _id: string;
@@ -37,12 +37,7 @@ const Chat = React.memo(
   }) => {
     console.log("Chat component rendered");
 
-    const socket = useRef(
-      io("https://mana-link.se",{
-        path: "/api/socket",
-        transports: ["websocket"],
-      })
-    ).current;
+    const socket = getSocket();
 
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState("");
@@ -76,6 +71,12 @@ const Chat = React.memo(
         socket.off("receive_message", receiveMessageListener);
       };
     }, [dmId, roomId]);
+
+    const scrollToBottom = (forceScroll = true) => {
+        if (forceScroll && messageEndRef.current) {
+          messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+      };
 
     useEffect(() => {
       const fetchOtherUser = async () => {
@@ -205,19 +206,13 @@ const Chat = React.memo(
         const result = await response.json();
         if (response.ok) {
           setNewMessage("");
-          setSendingMessage("mb-16");
+          setSendingMessage(bottomPadding);
           scrollToBottom();
         } else {
           console.error(result.error);
         }
       } catch (error) {
         console.error("Error sending message:", error);
-      }
-    };
-
-    const scrollToBottom = () => {
-      if (messageEndRef.current) {
-        messageEndRef.current.scrollIntoView({ behavior: "smooth" });
       }
     };
 

@@ -11,22 +11,22 @@ const handle = app.getRequestHandler();
 
 const server = express();
 
-server.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        objectSrc: ["'none'"],
-        connectSrc: ["'self'", "wss://mana-link.se", "https://mana-link.se"],
-      },
-    },
-  })
-);
+// server.use(
+//   helmet({
+//     contentSecurityPolicy: {
+//       directives: {
+//         defaultSrc: ["'self'"],
+//         scriptSrc: ["'self'", "'unsafe-inline'"],
+//         styleSrc: ["'self'", "'unsafe-inline'"],
+//         objectSrc: ["'none'"],
+//         connectSrc: ["'self'", "wss://mana-link.se", "https://mana-link.se"],
+//       },
+//     },
+//   })
+// );
 
 const httpServer = http.createServer(server);
-const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
+// const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
 
 const io = new Server(httpServer, {
   path: "/api/socket",
@@ -37,7 +37,7 @@ const io = new Server(httpServer, {
   },
 });
 
-io.adapter(redisAdapter(redisUrl));
+// io.adapter(redisAdapter(redisUrl));
 
 global._io = io;
 

@@ -2,22 +2,28 @@ export const dynamic = "force-dynamic";
 
 import { Server as HttpServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
+import { createClient } from 'redis';
+import { createAdapter } from '@socket.io/redis-adapter';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Socket } from 'net';
 
-interface SocketWithServer extends Socket {
-    server: HttpServer & { io?: SocketIOServer };
+const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
+const pubClient = createClient({ url: redisUrl });
+const subClient = pubClient.duplicate();
+
+async function setupRedis() {
+    await pubClient.connect();
+    await subClient.connect();
 }
 
-interface NextApiResponseWithSocket extends NextApiResponse {
-    socket: SocketWithServer;
-}
+const initializeSocketServer = async (res: NextApiResponse) => {
+    await setupRedis();
 
-const initializeSocketServer = (res: NextApiResponseWithSocket) => {
-    if (!res.socket.server.io) {
-        console.log('Setting up WebSocket server...');
+    const socketServer = res.socket as unknown as { server: HttpServer & { io?: SocketIOServer } };
 
-        const io = new SocketIOServer(res.socket.server, {
+    if (!socketServer.server.io) {
+        console.log('Setting up WebSocket server with Redis...');
+
+        const io = new SocketIOServer(socketServer.server, {
             path: '/api/socket',
             cors: {
                 origin: '*',
@@ -26,7 +32,7 @@ const initializeSocketServer = (res: NextApiResponseWithSocket) => {
             },
         });
 
-        res.socket.server.io = io;
+        io.adapter(createAdapter(pubClient, subClient));
 
         io.on('connection', (socket) => {
             console.log('Client connected via WebSocket');
@@ -57,14 +63,16 @@ const initializeSocketServer = (res: NextApiResponseWithSocket) => {
             });
         });
 
-        console.log('WebSocket server initialized.');
+        socketServer.server.io = io;
+
+        console.log('WebSocket server with Redis initialized.');
     } else {
         console.log('WebSocket server is already running.');
     }
 };
 
-export async function GET(req: NextApiRequest, res: NextApiResponseWithSocket) {
-    initializeSocketServer(res);
+export async function GET(req: NextApiRequest, res: NextApiResponse) {
+    await initializeSocketServer(res);
     res.end();
 }
 
