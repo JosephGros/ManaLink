@@ -6,18 +6,18 @@ import { createAdapter } from '@socket.io/redis-adapter';
 import { NextApiRequest, NextApiResponse } from 'next';
 import jwt from 'jsonwebtoken';
 
-const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
-const pubClient = createClient({ url: redisUrl });
-const subClient = pubClient.duplicate();
+// const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
+// const pubClient = createClient({ url: redisUrl });
+// const subClient = pubClient.duplicate();
+// async function setupRedis() {
+//     await pubClient.connect();
+//     await subClient.connect();
+// }
+
 const secretKey: any = process.env.JWT_SECRET;
 
-async function setupRedis() {
-    await pubClient.connect();
-    await subClient.connect();
-}
-
 const initializeSocketServer = async (res: NextApiResponse) => {
-    await setupRedis();
+    // await setupRedis();
 
     const socketServer = res.socket as any;
 
@@ -36,7 +36,7 @@ const initializeSocketServer = async (res: NextApiResponse) => {
             pingInterval: 25000,
         });
 
-        io.adapter(createAdapter(pubClient, subClient));
+        // io.adapter(createAdapter(pubClient, subClient));
 
 
         io.on('connection', (socket) => {
