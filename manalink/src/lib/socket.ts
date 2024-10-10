@@ -4,16 +4,15 @@ let socket: ReturnType<typeof io> | null = null;
 
 const getSocket = () => {
   if (!socket) {
-    const baseURL = process.env.BASE_URL || 'https://mana-link.se';
+    // const baseURL = process.env.BASE_URL || 'https://mana-link.se';
 
-    socket = io(baseURL, {
+    socket = io('wss://mana-link.se', {
       path: '/api/socket',
-      transports: ['websocket'],
+      transports: ['websocket', 'polling'],
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
       timeout: 10000,
       autoConnect: true,
-      secure: baseURL.startsWith('https'),
     });
 
     socket.on('connect', () => {
