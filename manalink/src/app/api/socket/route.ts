@@ -18,7 +18,7 @@ async function setupRedis() {
 const initializeSocketServer = async (res: NextApiResponse) => {
     await setupRedis();
 
-    const socketServer = res.socket as unknown as { server: HttpServer & { io?: SocketIOServer } };
+    const socketServer = res.socket as any;
 
     if (!socketServer.server.io) {
         console.log('Setting up WebSocket server with Redis...');
