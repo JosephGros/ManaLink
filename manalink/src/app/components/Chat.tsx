@@ -73,10 +73,10 @@ const Chat = React.memo(
     }, [dmId, roomId]);
 
     const scrollToBottom = (forceScroll = true) => {
-        if (forceScroll && messageEndRef.current) {
-          messageEndRef.current.scrollIntoView({ behavior: "smooth" });
-        }
-      };
+      if (forceScroll && messageEndRef.current) {
+        messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    };
 
     useEffect(() => {
       const fetchOtherUser = async () => {
@@ -100,6 +100,14 @@ const Chat = React.memo(
 
       fetchOtherUser();
     }, [otherUserId]);
+
+    useEffect(() => {
+      if (!otherUserId && messageType === "user") {
+        console.error("otherUserId is missing for user DM");
+        return;
+      }
+      fetchMessages(page, true);
+    }, [roomId, dmId, otherUserId, messageType, currentUserId]);
 
     const fetchMessages = useCallback(
       async (page: number, initialLoad = false) => {
@@ -138,14 +146,6 @@ const Chat = React.memo(
       },
       [isFetching, hasMoreMessages, messageType, dmId, roomId, currentUserId]
     );
-
-    useEffect(() => {
-      if (!otherUserId && messageType === "user") {
-        console.error("otherUserId is missing for user DM");
-        return;
-      }
-      fetchMessages(page, true);
-    }, [roomId, dmId, otherUserId, messageType, currentUserId]);
 
     const handleAcceptInvite = async (inviteId: string) => {
       try {

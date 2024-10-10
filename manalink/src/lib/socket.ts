@@ -4,7 +4,7 @@ let socket: ReturnType<typeof io> | null = null;
 
 const getSocket = () => {
   if (!socket) {
-    const baseURL = process.env.BASE_URL || 'http://localhost:3000';
+    const baseURL = process.env.BASE_URL || 'https://mana-link.se';
 
     socket = io(baseURL, {
       path: '/api/socket',

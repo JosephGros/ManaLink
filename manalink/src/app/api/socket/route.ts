@@ -26,10 +26,12 @@ const initializeSocketServer = async (res: NextApiResponse) => {
         const io = new SocketIOServer(socketServer.server, {
             path: '/api/socket',
             cors: {
-                origin: '*',
+                origin: 'https://mana-link.se',
                 methods: ['GET', 'POST'],
                 credentials: true,
             },
+            pingTimeout: 60000,
+            pingInterval: 25000,
         });
 
         io.adapter(createAdapter(pubClient, subClient));
