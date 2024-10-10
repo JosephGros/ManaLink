@@ -25,12 +25,13 @@ const initializeSocketServer = async (res: NextApiResponse) => {
 
         const io = new SocketIOServer(socketServer.server, {
             path: '/api/socket',
+            transports: ['websocket', 'polling'],
             cors: {
                 origin: 'https://mana-link.se',
                 methods: ['GET', 'POST'],
                 credentials: true,
             },
-            pingTimeout: 60000,
+            pingTimeout: 90000,
             pingInterval: 25000,
         });
 
