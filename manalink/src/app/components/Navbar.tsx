@@ -8,7 +8,7 @@ import ProfileIcon from '../../../public/assets/Icons/NavIcons/circle-user.png';
 
 const Navbar = () => {
   return (
-    <nav className="bg-nav fixed bottom-0 w-full h-16 flex justify-around items-center shadow-lg z-20">
+    <nav className="bg-nav fixed bottom-0 w-full pb-4 h-20 flex justify-around items-center shadow-lg z-20">
       <Link href="/users" passHref>
         <button className="flex flex-col items-center justify-center">
           <Image src={UsersIcon} alt="Users" width={24} height={24} />

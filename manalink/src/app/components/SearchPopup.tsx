@@ -1,4 +1,5 @@
 import { useState } from "react";
+import CustomLoader from "./CustomLoading";
 
 interface User {
   _id: string;
@@ -52,7 +53,7 @@ const SearchPopup = ({
   };
 
   return (
-    <div className="search-popup">
+    <div className="">
       <input
         type="text"
         placeholder="Search for users..."
@@ -62,7 +63,7 @@ const SearchPopup = ({
       />
       <button onClick={handleSearch}>Search</button>
 
-      {loading && <p>Loading...</p>}
+      {loading && <CustomLoader />}
 
       <div className="search-results">
         {searchResults.length > 0 ? (

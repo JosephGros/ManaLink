@@ -2,9 +2,8 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongoose';
 import User from '@/models/User';
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const userId = searchParams.get('userId');
+export async function POST(req: Request) {
+const { userId } = await req.json();
 
   if (!userId) {
     return NextResponse.json({ success: false, message: 'User ID is required' }, { status: 400 });
@@ -31,6 +30,8 @@ export async function GET(req: Request) {
         xp: user.xp,
         level: user.level,
         friends: user.friends,
+        friendRequestsSent: user.friendRequestsSent,
+        friendRequestsReceived: user.friendRequestsReceived,
         playgroups: user.playgroups,
         achievements: user.achievements
       }

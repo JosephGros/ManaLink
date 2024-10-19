@@ -49,6 +49,7 @@ const Chat = React.memo(
     const [isFetching, setIsFetching] = useState(false);
     const [hasMoreMessages, setHasMoreMessages] = useState(true);
     const [sendingMessage, setSendingMessage] = useState("");
+    const [senderUsers, setSenderUsers] = useState<{ [key: string]: User }>({});
 
     const MESSAGES_PER_PAGE = 50;
 
@@ -77,29 +78,6 @@ const Chat = React.memo(
         messageEndRef.current.scrollIntoView({ behavior: "smooth" });
       }
     };
-
-    useEffect(() => {
-      const fetchOtherUser = async () => {
-        if (!otherUserId) return;
-
-        try {
-          const response = await fetch(
-            `/api/user-details?userId=${otherUserId}`
-          );
-          const data = await response.json();
-
-          if (response.ok && data?.user) {
-            setOtherUser(data.user);
-          } else {
-            console.error("Failed to fetch other user data");
-          }
-        } catch (error) {
-          console.error("Error fetching other user:", error);
-        }
-      };
-
-      fetchOtherUser();
-    }, [otherUserId]);
 
     useEffect(() => {
       if (!otherUserId && messageType === "user") {
@@ -140,12 +118,42 @@ const Chat = React.memo(
               }
             }, 100);
           }
+          const senderIds = Array.from(
+            new Set(data.map((msg: Message) => msg.senderId))
+          );
+          fetchSenders(senderIds);
         }
         setIsFetching(false);
         setLoading(false);
       },
       [isFetching, hasMoreMessages, messageType, dmId, roomId, currentUserId]
     );
+
+    const fetchSenders = async (senderIds: string[]) => {
+      try {
+        const response = await fetch("/api/users-details", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userIds: senderIds }),
+        });
+
+        const data = await response.json();
+        if (response.ok && data?.users) {
+          const usersMap = data.users.reduce(
+            (acc: { [key: string]: User }, user: User) => {
+              acc[user._id] = user;
+              return acc;
+            },
+            {}
+          );
+          setSenderUsers((prevUsers) => ({ ...prevUsers, ...usersMap }));
+        } else {
+          console.error("Failed to fetch users");
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
 
     const handleAcceptInvite = async (inviteId: string) => {
       try {
@@ -241,7 +249,7 @@ const Chat = React.memo(
     }
 
     const bottomPadding = messageType === "group" ? "mb-16" : "mb-0";
-    const bottomPadding2 = messageType === "group" ? "bottom-32" : "bottom-16";
+    const bottomPadding2 = messageType === "group" ? "bottom-36" : "bottom-20";
 
     return (
       <div
@@ -263,10 +271,10 @@ const Chat = React.memo(
                 {msg.senderId !== currentUserId && (
                   <div className="flex items-start">
                     <div className="w-8 h-8 bg-bg2 rounded-full mr-2">
-                      {otherUser?.profilePicture ? (
+                      {senderUsers[msg.senderId]?.profilePicture ? (
                         <Image
-                          src={otherUser.profilePicture}
-                          alt={otherUser.username}
+                          src={senderUsers[msg.senderId]?.profilePicture}
+                          alt={senderUsers[msg.senderId]?.username}
                           width={32}
                           height={32}
                           className="w-full h-full rounded-full object-cover"
@@ -278,7 +286,7 @@ const Chat = React.memo(
                     <div>
                       <div className="flex flex-row items-center">
                         <p className="text-sm text-textcolor pr-4">
-                          {otherUser?.username ?? "User"}
+                          {senderUsers[msg.senderId]?.username ?? "User"}
                         </p>
                         <p className="text-xs text-icon">
                           {msg?.createdAt

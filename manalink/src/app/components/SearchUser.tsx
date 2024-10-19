@@ -22,7 +22,7 @@ interface User {
   friends: string;
 }
 
-const UserSearch = ({
+const UserMemberSearch = ({
   inviterId,
   playgroupId,
 }: {
@@ -289,4 +289,4 @@ const UserSearch = ({
   );
 };
 
-export default UserSearch;
+export default UserMemberSearch;

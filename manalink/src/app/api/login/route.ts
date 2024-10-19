@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-
 const JWT_SECRET: any = process.env.JWT_SECRET;
 
 const normalizeIp = (ip: string) => {
@@ -13,18 +12,29 @@ const normalizeIp = (ip: string) => {
     }
     return ip;
 };
+
 interface JwtPayloadCustom {
     id: string;
     role: string;
+    exp: number;
 }
 
 const extendTokenExpiration = (token: string) => {
     try {
-        const payload = jwt.verify(token, JWT_SECRET) as JwtPayloadCustom;
-        return jwt.sign({ id: payload.id, role: payload.role }, JWT_SECRET, {
-            expiresIn: "1h",
-        });
-    } catch (error) {
+        const payload = jwt.verify(token, JWT_SECRET, { ignoreExpiration: false }) as JwtPayloadCustom;
+
+        const currentTime = Math.floor(Date.now() / 1000);
+        const timeToExpire = payload.exp - currentTime;
+
+        if (timeToExpire < 900) {
+            return jwt.sign({ id: payload.id, role: payload.role }, JWT_SECRET, {
+                expiresIn: "1h",
+            });
+        }
+
+        return token;
+    } catch (error: any) {
+        console.log("Token verification failed: ", error.message);
         return null;
     }
 };
@@ -54,12 +64,10 @@ export async function POST(req: Request) {
                 console.log("Known IP matched, skipping 2FA");
 
                 let token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
-
                 const refreshToken = extendTokenExpiration(token);
                 if (refreshToken) token = refreshToken;
 
                 const response = NextResponse.json({ message: 'Login successful!', token }, { status: 200 });
-
                 response.cookies.set('token', token, {
                     httpOnly: true,
                     secure: process.env.NODE_ENV === 'production',
@@ -75,12 +83,10 @@ export async function POST(req: Request) {
         }
 
         let token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
-
         const refreshToken = extendTokenExpiration(token);
         if (refreshToken) token = refreshToken;
 
         const response = NextResponse.json({ message: 'Login successful!', token }, { status: 200 });
-
         response.cookies.set('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',

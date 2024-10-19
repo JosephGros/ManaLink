@@ -1,5 +1,9 @@
-import { useRouter } from 'next/navigation';
-import React from 'react';
+"use client";
+
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import React from "react";
+import backArrow from "../../../public/assets/Icons/IconColor/arrow-small-left.png";
 
 interface BackButtonProps {
   label?: string;
@@ -7,7 +11,11 @@ interface BackButtonProps {
   className?: string;
 }
 
-const BackButton: React.FC<BackButtonProps> = ({ label = 'Go Back', customPath, className }) => {
+const BackButton: React.FC<BackButtonProps> = ({
+  label = "Go Back",
+  customPath,
+  className,
+}) => {
   const router = useRouter();
 
   const handleClick = () => {
@@ -20,7 +28,13 @@ const BackButton: React.FC<BackButtonProps> = ({ label = 'Go Back', customPath, 
 
   return (
     <button onClick={handleClick} className={className}>
-      {label}
+      <Image
+        src={backArrow}
+        alt={label}
+        width={20}
+        height={20}
+        className="w-8 h-8 rounded-full object-cover"
+      />
     </button>
   );
 };

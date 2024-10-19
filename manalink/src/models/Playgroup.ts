@@ -15,10 +15,6 @@ export interface IPlaygroup extends Document {
   createdAt: Date;
 }
 
-function generatePlaygroupCode(): string {
-  return Math.random().toString(36).substring(2, 8).toUpperCase();
-}
-
 const PlaygroupSchema: Schema = new Schema({
   name: { type: String, required: true },
   playgroupCode: { type: String, required: true, unique: true },

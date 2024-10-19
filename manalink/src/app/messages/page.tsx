@@ -12,7 +12,7 @@ const ChatPage = () => {
                     <ChatList />
                 </div>
             </div>
-            <div className="fixed bottom-16 left-0 right-0 h-14 bg-background z-10">
+            <div className="fixed bottom-20 left-0 right-0 h-14 bg-background z-10">
                 <ChatNav />
             </div>
         </>

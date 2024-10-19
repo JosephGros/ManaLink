@@ -57,7 +57,15 @@ const UserSchema = new mongoose.Schema({
         default: 0
     },
     friends: {
-        type: [String],
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+        default: []
+    },
+    friendRequestsSent: {
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+        default: []
+    },
+    friendRequestsReceived: {
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
         default: []
     },
     playgroups: {

@@ -1,5 +1,6 @@
 "use client";
 
+import PlaygroupMembersList from "@/app/components/PlaygroupMembers";
 import { usePathname, useRouter } from "next/navigation";
 
 const PlaygroupMembers = () => {
@@ -21,6 +22,7 @@ const PlaygroupMembers = () => {
       >
         Add user
       </button>
+      <PlaygroupMembersList playgroupId={playgroupId} />
     </div>
   );
 };

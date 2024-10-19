@@ -60,7 +60,14 @@ const fetchMessages = async (userId: string): Promise<MessageItem[]> => {
         }
 
         const userResponse = await fetch(
-          `/api/user-details?userId=${otherUserId}`
+          '/api/user-details',
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId: otherUserId }),
+          }
         );
         const otherUser = await userResponse.json();
 
@@ -156,8 +163,8 @@ const MessagesPage = () => {
             key={message.id}
             href={
               message.type === "user"
-                ? `/chat/${message.id}?otherUserId=${message.otherUserId}`
-                : `/playgroups/${message.id}`
+                ? `/chat/${message.id}?otherUserId=${message.otherUserId}&otherUsername=${message.name}`
+                : `/playgroups/${message.id}?playgroup=${message.name}&playgroupId=${message.id}`
             }
           >
             <div className="flex items-center p-2 sm:w-96 w-80 bg-bg2 rounded-lg hover:bg-bg3 cursor-pointer shadow-md my-1">
@@ -171,7 +178,9 @@ const MessagesPage = () => {
                 />
               </div>
               <div className="ml-4 flex-1">
-                <p className="font-bold text-lg">{message.name}</p>
+                <p className="font-bold text-lg truncate max-w-56">
+                  {message.name}
+                </p>
                 <p className="text-sm text-gray-400 truncate max-w-56">
                   {message.preview}
                 </p>

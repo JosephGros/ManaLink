@@ -7,10 +7,13 @@ const JWT_SECRET: any = process.env.JWT_SECRET;
 
 const PlaygroupChatPage = async ({
   params,
+  searchParams,
 }: {
   params: { playgroupId: string };
+  searchParams: { playgroup: string };
 }) => {
   const { playgroupId } = params;
+  const { playgroup } = searchParams;
 
   const cookieStore = cookies();
   const token = cookieStore.get("token")?.value;
@@ -31,7 +34,7 @@ const PlaygroupChatPage = async ({
     <div>
       <div className="fixed top-0 left-0 right-0 h-14 w-full bg-background flex justify-center items-center z-10 border-b-2 border-bg3">
         <h1 className="text-3xl font-bold text-center text-textcolor">
-          {playgroupId}
+          {playgroup}
         </h1>
       </div>
       <div className="fixed top-14 left-0 right-0 bottom-32">

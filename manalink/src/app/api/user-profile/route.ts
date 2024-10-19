@@ -2,18 +2,36 @@ import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import User from "@/models/User";
 import dbConnect from "@/lib/mongoose";
+import { cookies } from "next/headers";
 
 const JWT_SECRET: any = process.env.JWT_SECRET;
 
 export async function GET(req: Request) {
     try {
-        const token = req.headers.get("cookie")?.split("token=")[1]?.split(";")[0];
+        const authorizationHeader = req.headers.get("Authorization");
+        let token;
 
-        if (!token) {
-            return NextResponse.json({ error: "Token not found" }, { status: 401 });
+        if (authorizationHeader) {
+            token = authorizationHeader.split("Bearer ")[1];
         }
 
-        const decodedToken = jwt.verify(token, JWT_SECRET);
+        if (!token) {
+            const cookieStore = cookies();
+            token = cookieStore.get("token")?.value;
+        }
+
+        if (!token) {
+            return NextResponse.json(
+                { error: "Token not found in Authorization header or cookies" },
+                { status: 401 }
+            );
+        }
+
+        if (!JWT_SECRET) {
+            throw new Error("JWT_SECRET is not defined");
+        }
+
+        const decodedToken = jwt.verify(token, JWT_SECRET as string);
         const userId = (decodedToken as any)?.id;
 
         if (!userId) {
@@ -29,6 +47,9 @@ export async function GET(req: Request) {
 
         return NextResponse.json({ user });
     } catch (error: any) {
-        return NextResponse.json({ error: "Failed to retrieve user info", details: error.message }, { status: 500 });
+        return NextResponse.json(
+            { error: "Failed to retrieve user info", details: error.message },
+            { status: 500 }
+        );
     }
 }
