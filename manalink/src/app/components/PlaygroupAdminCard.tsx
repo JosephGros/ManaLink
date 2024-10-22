@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import admin from "../../../public/assets/Icons/IconColor/crown2.png";
-import addFriend from "../../../public/assets/Icons/IconColor/shield-plus.png";
+import addFriendIcon from "../../../public/assets/Icons/IconColor/shield-plus.png";
 import Link from "next/link";
 
 interface AdminProfileCardProps {
@@ -12,9 +12,12 @@ interface AdminProfileCardProps {
     level: number;
     profilePicture: string;
   };
+  currentUserId: string;
 }
 
-export default function PlaygroupAdminCard({ user }: AdminProfileCardProps) {
+export default function PlaygroupAdminCard({ user, currentUserId, }: AdminProfileCardProps) {
+
+    const isAdmin = user._id === currentUserId;
 
   return (
     <div className="flex flex-col items-center justify-between p-2 bg-bg2 rounded-lg my-1 shadow-md h-18 w-96">
@@ -55,15 +58,17 @@ export default function PlaygroupAdminCard({ user }: AdminProfileCardProps) {
                 lvl {user.level}
                 </p>
             </div>
-            <div className="flex flex-row items-center col-start-5">
+            {!isAdmin && (
+              <div className="flex flex-row items-center col-start-5">
                 <Image
-                src={addFriend}
-                alt="User Avatar"
-                width={25}
-                height={25}
-                className="w-9 h-9 object-cover"
+                  src={addFriendIcon}
+                  alt="Add Friend"
+                  width={25}
+                  height={25}
+                  className="w-9 h-9 object-cover"
                 />
-            </div>
+              </div>
+            )}
             </div>
         </div>
       </Link>

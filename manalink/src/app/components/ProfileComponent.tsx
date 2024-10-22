@@ -40,7 +40,6 @@ const ProfileComponent = () => {
         body: JSON.stringify({ userId: user._id, xpToAdd: xpAmount }),
       });
       const data = await response.json();
-      console.log(data);
       const updatedUserResponse = await fetch("/api/user-profile");
       const updatedUserData = await updatedUserResponse.json();
       setUser(updatedUserData.user);

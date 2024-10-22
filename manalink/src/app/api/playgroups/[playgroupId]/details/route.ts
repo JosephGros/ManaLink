@@ -4,7 +4,6 @@ import Playgroup from '@/models/Playgroup';
 
 export async function POST(req: Request) {
   const { playgroupId } = await req.json();
-  console.log('Hello! ', playgroupId);
 
   if (!playgroupId) {
     console.error('Playgroup ID is missing');
@@ -19,7 +18,6 @@ export async function POST(req: Request) {
       console.error(`Playgroup with ID ${playgroupId} not found`);
       return NextResponse.json({ success: false, message: 'Playgroup not found' }, { status: 404 });
     }
-
     return NextResponse.json({
       success: true,
       playgroup: {

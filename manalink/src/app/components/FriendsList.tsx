@@ -98,51 +98,56 @@ const FriendsList = ({ userId }: { userId: string }) => {
           <h2 className="text-3xl font-bold">Friends List</h2>
         </div>
         <div className="fixed top-20 left-0 right-0 bottom-20 pt-4 flex flex-col items-center mx-2 overflow-auto flex-grow">
-          {friendsList.map((friend) => (
-            <div
-              key={friend._id}
-              className="flex items-center justify-between p-2 bg-bg2 rounded-lg my-1 shadow-md h-18 w-11/12 sm:w-3/4"
-            >
-              <div className="grid grid-cols-9 gap-x-1 flex items-center w-full">
-                <div className="flex flex-col justify-center items-center col-span-2 w-18">
-                  <div className="w-12 h-12 bg-background rounded-full flex items-center justify-center">
-                    <Image
-                      src={friend.profilePicture}
-                      alt="Friend Avatar"
-                      width={48}
-                      height={48}
-                      className="w-full h-full rounded-full object-cover"
-                    />
-                  </div>
-                </div>
-                <div className="col-span-5">
-                  <p className="font-bold text-xl text-textcolor truncate">
-                    <a
-                      href={`/otherUserProfile/${friend._id}?userId=${friend._id}`}
+            <div className="flex flex-wrap justify-center w-3/4">
+                {friendsList.map((friend) => (
+                    <div
+                    key={friend._id}
+                    className="flex items-center justify-between p-2 bg-bg2 mx-2 rounded-lg my-1 shadow-md h-18 w-64"
                     >
-                      {friend.username}
-                    </a>
-                  </p>
-                  <p className="text-xs text-start text-textcolor text-center mt-1">
-                    lvl {friend.level}
-                  </p>
-                </div>
-                <div className="col-span-2 flex justify-end space-x-2">
-                  <button
-                    onClick={() => handleRemoveFriend(friend._id)}
-                    className="bg-btn text-danger px-4 py-1 rounded-lg"
-                  >
-                    <Image
-                      src={removeFriendIcon}
-                      alt="Remove Friend"
-                      width={25}
-                      height={25}
-                    />
-                  </button>
-                </div>
-              </div>
+                    <div className="flex flex-row justify-center justify-between items-center w-full">
+                        <div className="flex flex-row justify-center">
+                        <div className="flex flex-col justify-center items-center col-span-2 w-18">
+                        <div className="w-12 h-12 bg-background rounded-full flex items-center justify-center">
+                            <Image
+                            src={friend.profilePicture}
+                            alt="Friend Avatar"
+                            width={48}
+                            height={48}
+                            className="w-full h-full rounded-full object-cover"
+                            />
+                        </div>
+                        </div>
+                        <div className="ml-4 w-32">
+                        <p className="font-bold text-xl text-textcolor truncate">
+                            <a
+                            href={`/otherUserProfile/${friend._id}?userId=${friend._id}`}
+                            >
+                            {friend.username}
+                            </a>
+                        </p>
+                        <p className="text-xs text-start text-textcolor text-center mt-1">
+                            lvl {friend.level}
+                        </p>
+                        </div>
+                        </div>
+                        <div className="flex justify-end space-x-2">
+                        <button
+                            onClick={() => handleRemoveFriend(friend._id)}
+                            className="bg-btn text-danger w-12 h-8 rounded-lg flex justify-center items-center"
+                        >
+                            <Image
+                            src={removeFriendIcon}
+                            alt="Remove Friend"
+                            width={25}
+                            height={25}
+                            className="w-6 h-6"
+                            />
+                        </button>
+                        </div>
+                    </div>
+                    </div>
+                ))}
             </div>
-          ))}
         </div>
       </div>
     </div>

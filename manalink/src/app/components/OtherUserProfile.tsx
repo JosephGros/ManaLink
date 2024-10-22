@@ -5,6 +5,13 @@ import Image from "next/image";
 import { calculateRequiredXP } from "@/lib/xpConstants";
 import CustomLoader from "./CustomLoading";
 import BackButton from "./BackBtn";
+import RemoveFriendPopup from "./RemoveFriendPopup";
+import addFriendIcon from "../../../public/assets/Icons/NavColor/shield-plus3.png";
+import removeFriendIcon from "../../../public/assets/Icons/NavColor/shield-check.png";
+import pendingIcon from "../../../public/assets/Icons/NavColor/duration-alt (1).png";
+import sendIcon from "../../../public/assets/Icons/NavColor/paper-plane2.png";
+import { useRouter } from "next/navigation";
+import ProfileMessagePopup from "./ProfileMessagePopup";
 
 interface OtherUserProfileComponentProps {
   profileUser: any;
@@ -17,17 +24,28 @@ const OtherUserProfileComponent = ({
 }: OtherUserProfileComponentProps) => {
   const [loading, setLoading] = useState(false);
   const [requestSent, setRequestSent] = useState(false);
+  const [isFriend, setIsFriend] = useState(false);
+  const [showRemovePopup, setShowRemovePopup] = useState(false);
+  const [showMessagePopup, setShowMessagePopup] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    const checkFriendRequestStatus = () => {
+    const checkFriendStatus = () => {
       if (
         currentUser.friendRequestsSent &&
         currentUser.friendRequestsSent.includes(profileUser._id)
       ) {
         setRequestSent(true);
       }
+
+      if (
+        currentUser.friends &&
+        currentUser.friends.includes(profileUser._id)
+      ) {
+        setIsFriend(true);
+      }
     };
-    checkFriendRequestStatus();
+    checkFriendStatus();
   }, [currentUser, profileUser]);
 
   const sendFriendRequest = async (friendId: string) => {
@@ -47,7 +65,6 @@ const OtherUserProfileComponent = ({
 
       const data = await response.json();
       if (data.success) {
-        console.log("Friend request sent!");
         setRequestSent(true);
       } else {
         console.error(data.error);
@@ -76,7 +93,6 @@ const OtherUserProfileComponent = ({
 
       const data = await response.json();
       if (data.success) {
-        console.log("Friend request canceled!");
         setRequestSent(false);
       } else {
         console.error(data.error);
@@ -85,6 +101,61 @@ const OtherUserProfileComponent = ({
       console.error("Error canceling friend request", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const removeFriend = async (friendId: string) => {
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/friend-request/remove", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: currentUser._id,
+          friendId: friendId,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setIsFriend(false);
+      } else {
+        console.error(data.error);
+      }
+    } catch (error) {
+      console.error("Error removing friend", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStartChat = async (firstMessage: string) => {
+    try {
+      const response = await fetch(`/api/dm`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          senderId: currentUser._id,
+          recipientId: profileUser._id,
+          firstMessage,
+        }),
+      });
+
+      if (response.ok) {
+        const { dmId } = await response.json();
+        router.push(
+          `/chat/${dmId}?otherUserId=${profileUser._id}&otherUsername=${profileUser.username}`
+        );
+      } else {
+        console.error("Failed to start new DM");
+      }
+    } catch (error) {
+      console.error("Error starting new DM:", error);
     }
   };
 
@@ -156,7 +227,10 @@ const OtherUserProfileComponent = ({
                   height={28}
                   className="mr-4"
                 />
-                <a href={`/friend/friendList?userId=${profileUser._id}`} className="text-base font-bold">
+                <a
+                  href={`/friend/friendList?userId=${profileUser._id}`}
+                  className="text-base font-bold"
+                >
                   {profileUser.friends.length} - Friends
                 </a>
               </div>
@@ -209,20 +283,80 @@ const OtherUserProfileComponent = ({
                 </a>
               </div>
             </div>
-            {!requestSent ? (
-              <button
-                onClick={() => sendFriendRequest(profileUser._id)}
-                className="bg-btn text-nav font-bold px-4 py-2 mt-4 rounded-md"
-              >
-                Send Friend Request
-              </button>
-            ) : (
-              <button
-                onClick={() => cancelFriendRequest(profileUser._id)}
-                className="bg-btn text-danger font-bold px-4 py-2 mt-4 rounded-md"
-              >
-                Cancel Friend Request
-              </button>
+            <div className="flex flex-row justify-evenly">
+                {!isFriend ? (
+                requestSent ? (
+                    <button
+                    onClick={() => cancelFriendRequest(profileUser._id)}
+                    className="bg-btn p-3 rounded-lg shadow-lg h-10 w-28 flex justify-center items-center"
+                    >
+                    <Image
+                        src={pendingIcon}
+                        alt="Pending"
+                        width={25}
+                        height={25}
+                        className="w-6 h-6"
+                    />
+                    </button>
+                ) : (
+                    <button
+                    onClick={() => sendFriendRequest(profileUser._id)}
+                    className="bg-btn p-3 rounded-lg shadow-lg h-10 w-28 flex justify-center items-center"
+                    >
+                    <Image
+                        src={addFriendIcon}
+                        alt="Add Friend"
+                        width={25}
+                        height={25}
+                        className="w-6 h-6"
+                    />
+                    </button>
+                )
+                ) : (
+                <button
+                    onClick={() => setShowRemovePopup(true)}
+                    className="bg-btn p-3 rounded-lg shadow-lg h-10 w-28 flex justify-center items-center"
+                >
+                    <Image
+                    src={removeFriendIcon}
+                    alt="Remove Friend"
+                    width={25}
+                    height={25}
+                    className="w-6 h-6"
+                    />
+                </button>
+                )}
+
+                <button
+                onClick={() => setShowMessagePopup(true)}
+                className="bg-btn p-3 rounded-lg shadow-lg h-10 w-28 flex justify-center items-center"
+                >
+                <Image
+                    src={sendIcon}
+                    alt="Remove Friend"
+                    width={25}
+                    height={25}
+                    className="w-6 h-6"
+                />
+                </button>
+            </div>
+
+            {showMessagePopup && (
+              <ProfileMessagePopup
+                onClose={() => setShowMessagePopup(false)}
+                onSend={handleStartChat}
+              />
+            )}
+
+            {showRemovePopup && (
+              <RemoveFriendPopup
+                friendName={profileUser.username}
+                onConfirm={() => {
+                  removeFriend(profileUser._id);
+                  setShowRemovePopup(false);
+                }}
+                onCancel={() => setShowRemovePopup(false)}
+              />
             )}
           </div>
         </div>

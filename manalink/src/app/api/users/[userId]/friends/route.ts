@@ -27,8 +27,6 @@ export async function GET(req: NextRequest, { params }: { params: { userId: stri
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    console.log('IM API : ', user.friends);
-
     return NextResponse.json({
       friends: user.friends,
     });

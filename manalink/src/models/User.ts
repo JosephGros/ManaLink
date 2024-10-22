@@ -69,7 +69,11 @@ const UserSchema = new mongoose.Schema({
         default: []
     },
     playgroups: {
-        type: [String],
+        type: [
+            {
+                playgroupId: mongoose.Schema.Types.ObjectId,
+                playgroupName: String
+            }],
         default: []
     },
     achievements: {

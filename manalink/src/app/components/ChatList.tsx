@@ -26,7 +26,6 @@ const fetchMessages = async (userId: string): Promise<MessageItem[]> => {
   const data = await response.json();
 
   if (!Array.isArray(data) || data.length === 0) {
-    console.log("No conversations found");
     return [];
   }
 
@@ -38,15 +37,6 @@ const fetchMessages = async (userId: string): Promise<MessageItem[]> => {
 
       if (message.type === "user") {
         otherUserId = message.otherUserId;
-
-        console.log(
-          "senderId:",
-          message.senderId,
-          "recipientId:",
-          message.recipientId,
-          "otherUserId:",
-          otherUserId
-        );
 
         if (!otherUserId) {
           console.error("otherUserId is undefined for message:", message);
@@ -74,7 +64,6 @@ const fetchMessages = async (userId: string): Promise<MessageItem[]> => {
         if (otherUser) {
           otherUserName = otherUser.user.username;
           otherUserProfilePicture = otherUser.user.profilePicture;
-          console.log(otherUserName, otherUserProfilePicture);
         }
 
         return {
@@ -136,7 +125,6 @@ const MessagesPage = () => {
           .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
         setMessages(Array.isArray(sortedMessages) ? sortedMessages : []);
-        console.log(sortedMessages);
       };
 
       getMessages();

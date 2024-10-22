@@ -3,12 +3,8 @@ import { cookies } from "next/headers";
 import PlaygroupLayout from "./layout";
 import { fetchAnyUser } from "@/lib/fetchAnyUser";
 import Image from "next/image";
-import playgroupIcon from "../../../../public/assets/Icons/IconColor/dice-d20_1.png";
-import friendsIcon from "../../../../public/assets/Icons/IconColor/users.png";
-import addFriend from "../../../../public/assets/Icons/IconColor/shield-plus.png";
-import removeFriend from "../../../../public/assets/Icons/IconColor/shield-check_1.png";
-import admin from "../../../../public/assets/Icons/IconColor/crown2.png";
 import PlaygroupAdminCard from "@/app/components/PlaygroupAdminCard";
+import { fetchUserData } from "@/lib/fetchUserData";
 
 interface PlaygroupPageProps {
   searchParams: { playgroupId?: string };
@@ -32,10 +28,11 @@ export default async function PlaygroupPage({
 
   let playgroup;
   let user;
+  let currentUser;
   try {
     playgroup = await fetchPlaygroupData(token, playgroupId);
     user = await fetchAnyUser(playgroup.playgroup.admin);
-    console.log('KCMNSDLCNDOCVMDOCKLC : ', user);
+    currentUser = await fetchUserData(token);
   } catch (error) {
     console.error("Error fetching playgroup data:", error);
     return <div>Error loading playgroup</div>;
@@ -63,7 +60,7 @@ export default async function PlaygroupPage({
         <h1 className="font-bold text-textcolor text-4xl mb-4 truncate max-w-72">
           {playgroup.playgroup.playgroupname}
         </h1>
-        <PlaygroupAdminCard user={user.user} />
+        <PlaygroupAdminCard user={user.user} currentUserId={currentUser.user._id}/>
         <p>Members: {playgroup.playgroup.members.length}</p>
       </div>
     </PlaygroupLayout>

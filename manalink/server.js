@@ -11,22 +11,7 @@ const handle = app.getRequestHandler();
 
 const server = express();
 
-// server.use(
-//   helmet({
-//     contentSecurityPolicy: {
-//       directives: {
-//         defaultSrc: ["'self'"],
-//         scriptSrc: ["'self'", "'unsafe-inline'"],
-//         styleSrc: ["'self'", "'unsafe-inline'"],
-//         objectSrc: ["'none'"],
-//         connectSrc: ["'self'", "wss://mana-link.se", "https://mana-link.se"],
-//       },
-//     },
-//   })
-// );
-
 const httpServer = http.createServer(server);
-// const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
 
 const io = new Server(httpServer, {
   path: "/api/socket",
@@ -37,22 +22,17 @@ const io = new Server(httpServer, {
   },
 });
 
-// io.adapter(redisAdapter(redisUrl));
-
 global._io = io;
 
 app.prepare().then(() => {
   io.on("connection", (socket) => {
-    console.log("Socket.IO client connected:", socket.id);
 
     socket.on("join_dm", (dmId) => {
       socket.join(dmId);
-      console.log(`User ${socket.id} joined DM: ${dmId}`);
     });
 
     socket.on("join_group", (roomId) => {
       socket.join(roomId);
-      console.log(`User ${socket.id} joined Group: ${roomId}`);
     });
 
     socket.on("send_message", (data) => {
@@ -65,7 +45,6 @@ app.prepare().then(() => {
     });
 
     socket.on("disconnect", () => {
-      console.log("Socket.IO client disconnected:", socket.id);
     });
   });
 
@@ -74,7 +53,5 @@ app.prepare().then(() => {
   });
 
   const PORT = process.env.PORT || 3000;
-  httpServer.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
+  httpServer.listen(PORT);
 });

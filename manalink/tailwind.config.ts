@@ -20,7 +20,8 @@ const config: Config = {
         bg2: "#4F4F4F",
         bg3: "#3D3C3C",
         danger: "#590808",
-        danger2: "#8b1c00"
+        danger2: "#8b1c00",
+        activeNav: "#007B7C"
       },
       backgroundImage: {
         'light-btn': "linear-gradient(to bottom, #B4E3E3, #77D7D7)",

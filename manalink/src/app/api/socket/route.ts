@@ -1,29 +1,17 @@
 export const dynamic = "force-dynamic";
 
 import { Server as SocketIOServer } from 'socket.io';
-import { createClient } from 'redis';
-import { createAdapter } from '@socket.io/redis-adapter';
 import { NextApiRequest, NextApiResponse } from 'next';
 import jwt from 'jsonwebtoken';
-
-// const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
-// const pubClient = createClient({ url: redisUrl });
-// const subClient = pubClient.duplicate();
-// async function setupRedis() {
-//     await pubClient.connect();
-//     await subClient.connect();
-// }
 
 const secretKey: any = process.env.JWT_SECRET;
 
 const initializeSocketServer = async (res: NextApiResponse) => {
-    // await setupRedis();
 
     const socketServer = res.socket as any;
 
     if (!socketServer.server.io) {
-        console.log('Setting up WebSocket server with Redis...');
-
+        // https://mana-link.se
         const io = new SocketIOServer(socketServer.server, {
             path: '/api/socket',
             transports: ['websocket', 'polling'],
@@ -36,33 +24,33 @@ const initializeSocketServer = async (res: NextApiResponse) => {
             pingInterval: 25000,
         });
 
-        // io.adapter(createAdapter(pubClient, subClient));
-
-
         io.on('connection', (socket) => {
             const token = socket.handshake.auth?.token;
 
             if (!token) {
-                console.log('No token provided');
                 return socket.disconnect(true);
             }
 
             jwt.verify(token, secretKey, (error: any, decoded: any) => {
                 if (error) {
-                    console.log('Invalid token:', error);
                     return socket.disconnect(true);
                 }
 
-                console.log('Authenticated client:', decoded);
+                socket.on("invite_response", (data) => {
+                    const { inviteId, status } = data;
+
+                    io.to(inviteId).emit("invite_response", {
+                        inviteId,
+                        status,
+                    });
+                });
 
                 socket.on('join_dm', (dmId) => {
-                    socket.join(dmId);
-                    console.log(`Client joined DM room: ${dmId}`);
+                    socket.join(dmId.toString());
                 });
 
                 socket.on('join_group', (roomId) => {
                     socket.join(roomId);
-                    console.log(`Client joined group room: ${roomId}`);
                 });
 
                 socket.on('send_message', (msg) => {
@@ -73,20 +61,18 @@ const initializeSocketServer = async (res: NextApiResponse) => {
                     } else {
                         io.emit('receive_message', msg);
                     }
-                    console.log('Message received:', msg);
                 });
 
                 socket.on('disconnect', () => {
-                    console.log('Client disconnected');
+                    // console.log('Client disconnected');
                 });
             });
         });
 
         socketServer.server.io = io;
 
-        console.log('WebSocket server with Redis initialized.');
     } else {
-        console.log('WebSocket server is already running.');
+        // console.log('WebSocket server is already running.');
     }
 };
 

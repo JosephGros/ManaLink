@@ -50,7 +50,6 @@ const UserSearch = () => {
     fetchInitialData();
   }, []);
 
-  console.log("FRIENDS LIST : ", friendsList);
   const handleSearch = async () => {
     setLoading(true);
     try {
@@ -64,7 +63,6 @@ const UserSearch = () => {
         (user: Friend) => user._id !== userId
       );
       setSearchResults(filteredResults);
-      console.log(searchResults);
     } catch (error) {
       console.error("Error searching users:", error);
     } finally {
@@ -211,7 +209,7 @@ const UserSearch = () => {
                 <div className="flex flex-row sm:justify-center items-center col-start-3 col-span-2 row-start-2 row-span-2 sm:row-start-1 sm:row-span-1 sm:col-start-6 sm:col-span-1">
                   <Image
                     src={friendsIcon}
-                    alt="User Avatar"
+                    alt="Friends Icon"
                     width={25}
                     height={25}
                     className="w-6 h-6 object-cover"
@@ -223,7 +221,7 @@ const UserSearch = () => {
                 <div className="flex flex-row sm:justify-center items-center col-start-5 col-span-2 row-start-2 row-span-2 sm:row-start-1 sm:row-span-1 sm:col-start-7 sm:col-span-1">
                   <Image
                     src={playgroupIcon}
-                    alt="User Avatar"
+                    alt="Playgroup Icon"
                     width={25}
                     height={25}
                     className="w-6 h-6 object-cover"
@@ -239,37 +237,40 @@ const UserSearch = () => {
                         setSelectedFriend(user);
                         setShowRemovePopup(true);
                       }}
-                      className="bg-btn px-4 py-1 rounded-lg"
+                      className="bg-btn text-danger w-12 h-8 rounded-lg flex justify-center items-center"
                     >
                       <Image
                         src={removeFriendIcon}
                         alt="Remove Friend"
                         width={25}
                         height={25}
+                        className="w-6 h-6"
                       />
                     </button>
                   ) : isPending(user._id) ? (
                     <button
                       onClick={() => handleCancelRequest(user._id)}
-                      className="bg-btn px-4 py-1 rounded-lg"
+                      className="bg-btn text-danger w-12 h-8 rounded-lg flex justify-center items-center"
                     >
                       <Image
                         src={pendingIcon}
                         alt="Pending"
                         width={25}
                         height={25}
+                        className="w-6 h-6"
                       />
                     </button>
                   ) : (
                     <button
                       onClick={() => handleAddFriend(user._id)}
-                      className="bg-btn px-4 py-1 rounded-lg"
+                      className="bg-btn text-danger w-12 h-8 rounded-lg flex justify-center items-center"
                     >
                       <Image
                         src={addFriendIcon}
                         alt="Add Friend"
                         width={25}
                         height={25}
+                        className="w-6 h-6"
                       />
                     </button>
                   )}

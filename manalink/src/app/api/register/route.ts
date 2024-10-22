@@ -80,7 +80,6 @@ export async function POST(req: Request) {
             friends: userFriends,
             achievements: userAchievements,
         });
-        console.log('New User : ', user);
         await user.save();
 
         return NextResponse.json({ message: 'User registered successfully!' }, { status: 201 });

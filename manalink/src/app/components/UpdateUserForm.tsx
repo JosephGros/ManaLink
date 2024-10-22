@@ -44,9 +44,6 @@ const UpdateUserForm = () => {
     fetchUser();
   }, []);
 
-  console.log(userId);
-  console.log(is2FAEnabled);
-
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(null);

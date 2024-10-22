@@ -1,10 +1,10 @@
 import io from 'socket.io-client';
 
-const token = getCookie('token');
 let socket: ReturnType<typeof io> | null = null;
 
 const getSocket = () => {
   if (!socket) {
+    const token = getCookie('token');
     // const baseURL = process.env.BASE_URL || 'https://mana-link.se';
 
     socket = io('wss://mana-link.se', {
@@ -20,11 +20,11 @@ const getSocket = () => {
     });
 
     socket.on('connect', () => {
-      console.log('Connected to Socket.IO server');
+    //   console.log('Connected to Socket.IO server');
     });
 
     socket.on('disconnect', (reason: string) => {
-      console.log('Disconnected:', reason);
+    //   console.log('Disconnected:', reason);
     });
 
     socket.on('connect_error', (error: Error) => {
@@ -32,7 +32,7 @@ const getSocket = () => {
     });
 
     socket.on('reconnect_attempt', () => {
-      console.log('Reconnecting...');
+    //   console.log('Reconnecting...');
     });
   }
 

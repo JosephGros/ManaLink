@@ -19,8 +19,6 @@ export async function GET() {
             return NextResponse.json({ error: 'Unable to determine IP address' }, { status: 500 });
         }
 
-        console.log('Determined IP Address from ipify:', ipAddress);
-
         return NextResponse.json({ ip: ipAddress });
     } catch (error: any) {
         return NextResponse.json({ error: 'Failed to fetch IP address', details: error.message }, { status: 500 });

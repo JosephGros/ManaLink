@@ -21,15 +21,10 @@ const FriendRequestList = () => {
         const currentUser = await fetch("/api/user-profile");
         const data = await response.json();
         const currentUserData = await currentUser.json();
-        console.log("Request DATA : ", data);
 
         setReceivedRequests(data.received);
         setSentRequests(data.sent);
         setCurrentUserId(currentUserData.user._id);
-
-        console.log("Received Requests: ", data.received);
-        console.log("Sent Requests: ", data.sent);
-        console.log("Sent Requests: ", currentUserData.user._id);
       } catch (error) {
         console.error("Error fetching friend requests", error);
       } finally {

@@ -34,7 +34,6 @@ const extendTokenExpiration = (token: string) => {
 
         return token;
     } catch (error: any) {
-        console.log("Token verification failed: ", error.message);
         return null;
     }
 };
@@ -58,10 +57,8 @@ export async function POST(req: Request) {
 
         if (user.twoFactorEnabled) {
             const knownIp = user.knownDevices.find((device: any) => normalizeIp(device.ip) === normalizeIp(ipAddress));
-            console.log('Known IP : ', knownIp);
 
             if (knownIp) {
-                console.log("Known IP matched, skipping 2FA");
 
                 let token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
                 const refreshToken = extendTokenExpiration(token);

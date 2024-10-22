@@ -30,9 +30,8 @@ export async function POST(req: Request) {
         if (!knownDevice) {
             user.knownDevices.push({ ip: ipAddress });
             await user.save();
-            console.log(`IP Address ${ipAddress} added to known devices.`);
         } else {
-            console.log(`IP Address ${ipAddress} already known.`);
+            // console.log(`IP Address ${ipAddress} already known.`);
         }
 
         const jwtToken = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });

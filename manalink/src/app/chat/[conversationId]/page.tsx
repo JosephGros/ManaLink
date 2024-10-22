@@ -37,7 +37,9 @@ const DMChatPage = async ({
       <div className="fixed top-0 left-0 right-0 h-14 w-full bg-background flex justify-center items-center z-10 border-b-2 border-bg3">
         <BackButton label="Back" className="fixed left-0 text-textcolor rounded-md w-12 flex justify-center" />
         <h1 className="text-3xl font-bold text-center text-textcolor self-center">
-            <a href={`/otherUserProfile/${otherUserId}?userId=${otherUserId}`}>{otherUsername}</a>
+            <a href={`/otherUserProfile/${otherUserId}?userId=${otherUserId}`}>
+                {otherUsername}
+            </a>
         </h1>
       </div>
       <div className="fixed top-14 left-0 right-0 bottom-[120px]">

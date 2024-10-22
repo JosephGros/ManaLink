@@ -2,11 +2,11 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongoose';
 import Playgroup from '@/models/Playgroup';
 import jwt from 'jsonwebtoken';
+import User from '@/models/User';
 
 const JWT_SECRET: any = process.env.JWT_SECRET;
 
 const generatePlaygroupCode = async (): Promise<string> => {
-
     const min = 100000;
     const max = 999999;
     let playgroupCode: string = '';
@@ -14,7 +14,6 @@ const generatePlaygroupCode = async (): Promise<string> => {
 
     while (!isUnique) {
         playgroupCode = Math.floor(Math.random() * (max - min + 1)) + min + '';
-
         const existingPlaygroup = await Playgroup.findOne({ playgroupCode });
         if (!existingPlaygroup) {
             isUnique = true;
@@ -44,7 +43,7 @@ export async function POST(req: Request) {
     }
 
     try {
-        const { name } = await req.json();
+        const { name, playerLimit } = await req.json();
 
         const newPlaygroup = await Playgroup.create({
             name,
@@ -57,7 +56,21 @@ export async function POST(req: Request) {
             profilePicture: '/assets/profile-pics/mtg.webp',
             xp: 0,
             level: 1,
+            playerLimit: playerLimit === 'infinite' ? null : playerLimit
         });
+
+        const userUpdateResult = await User.findByIdAndUpdate(currentUserId, {
+            $push: {
+                playgroups: {
+                    playgroupId: newPlaygroup._id,
+                    playgroupName: newPlaygroup.name,
+                }
+            }
+        }, { new: true });
+
+        if (!userUpdateResult) {
+            return NextResponse.json({ success: false, error: "User not found or could not be updated" }, { status: 404 });
+        }
 
         return NextResponse.json(newPlaygroup, { status: 201 });
     } catch (error: any) {

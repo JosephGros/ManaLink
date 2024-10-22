@@ -1,9 +1,10 @@
 export async function fetchPlaygroupData(token: string, playgroupId: string) {
+    const baseUrl = process.env.BASE_URL || "https://mana-link.se";
     if (!playgroupId) {
         throw new Error("Playgroup ID is required");
       }
     try {
-        const response = await fetch(`${process.env.BASE_URL}/api/playgroups/${playgroupId}/details`, {
+        const response = await fetch(`${baseUrl}/api/playgroups/${playgroupId}/details`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -15,7 +16,6 @@ export async function fetchPlaygroupData(token: string, playgroupId: string) {
         if (!response.ok) {
             throw new Error("Failed to fetch playgroup data");
         }
-
         const data = await response.json();
         return data;
     } catch (error) {

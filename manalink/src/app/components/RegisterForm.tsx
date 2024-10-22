@@ -110,8 +110,6 @@ const RegisterForm = () => {
       return;
     }
 
-    console.log("Validated : ", validation);
-
     const payload = {
       username,
       email,

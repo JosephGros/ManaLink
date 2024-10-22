@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import CustomLoader from "./CustomLoading";
 import searchIcon from "../../../public/assets/Icons/NavColor/search3.png";
@@ -8,18 +8,32 @@ import playgroupInvite from "../../../public/assets/Icons/NavColor/add_1.png";
 import retractInviteIcon from "../../../public/assets/Icons/NavColor/check-circle_1.png";
 import member from "../../../public/apple-touch-icon.png";
 import friendsIcon from "../../../public/assets/Icons/IconColor/users.png";
-import addFriend from "../../../public/assets/Icons/IconColor/shield-plus.png";
-import removeFriend from "../../../public/assets/Icons/IconColor/shield-check_1.png";
+import addFriendIcon from "../../../public/assets/Icons/IconColor/shield-plus.png";
+import removeFriendIcon from "../../../public/assets/Icons/IconColor/shield-check_1.png";
+import pendingIcon from "../../../public/assets/Icons/IconColor/duration-alt.png";
+import RemoveFriendPopup from "./RemoveFriendPopup";
+import BackButton from "./BackBtn";
+import io from "socket.io-client";
+import getSocket from "@/lib/socket";
 
 interface User {
   _id: string;
   username: string;
   userCode: string;
-  playgroups: string;
+  playgroups: string[];
   xp: number;
   level: number;
   profilePicture: string;
-  friends: string;
+  friends: string[];
+}
+
+interface Friend {
+  _id: string;
+  username: string;
+  level: number;
+  profilePicture: string;
+  friends: string[];
+  playgroups: string[];
 }
 
 const UserMemberSearch = ({
@@ -37,6 +51,32 @@ const UserMemberSearch = ({
     [key: string]: string;
   }>({});
   const [playgroupMembers, setPlaygroupMembers] = useState<string[]>([]);
+  const [friendsList, setFriendsList] = useState<string[]>([]);
+  const [userId, setUserId] = useState("");
+  const [pendingRequests, setPendingRequests] = useState<string[]>([]);
+  const [manageMessage, setManageMessage] = useState<string | null>(null);
+  const [showRemovePopup, setShowRemovePopup] = useState(false);
+  const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null);
+  const socket = getSocket();
+
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`/api/user-profile`);
+        const data = await response.json();
+        setUserId(data.user._id);
+        setFriendsList(data.user.friends);
+        setPendingRequests(data.user.friendRequestsSent || []);
+      } catch (error) {
+        console.error("Error fetching friends:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInitialData();
+  }, []);
 
   const handleSearch = async () => {
     setLoading(true);
@@ -55,8 +95,7 @@ const UserMemberSearch = ({
         `/api/playgroups/${playgroupId}/members`
       );
       const membersData = await membersResponse.json();
-      setPlaygroupMembers(membersData);
-
+      setPlaygroupMembers(membersData.members);
       const query = new URLSearchParams({
         ...(username && { username }),
         ...(userCode && { userCode }),
@@ -109,6 +148,11 @@ const UserMemberSearch = ({
 
       const data = await response.json();
       if (response.ok) {
+        socket.emit("invite_sent", {
+          inviteeId,
+          playgroupName: data.playgroupName,
+        });
+
         setInviteStatuses((prev) => ({
           ...prev,
           [inviteeId]: currentStatus === "pending" ? "none" : "pending",
@@ -151,8 +195,89 @@ const UserMemberSearch = ({
     }
   };
 
+  const handleAddFriend = async (friendId: string) => {
+    try {
+      const response = await fetch(`/api/friend-request/send`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ senderId: userId, recipientId: friendId }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setManageMessage("Friend request sent!");
+        setPendingRequests((prev) => [...prev, friendId]);
+      } else {
+        setManageMessage(data.message || "Failed to send friend request");
+      }
+    } catch (error) {
+      console.error("Error sending friend request:", error);
+      setManageMessage("Failed to send friend request");
+    }
+  };
+
+  const handleCancelRequest = async (friendId: string) => {
+    try {
+      const response = await fetch(`/api/friend-request/cancel`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ senderId: userId, recipientId: friendId }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setManageMessage("Friend request canceled!");
+        setPendingRequests((prev) => prev.filter((id) => id !== friendId));
+      } else {
+        setManageMessage(data.message || "Failed to cancel friend request");
+      }
+    } catch (error) {
+      console.error("Error canceling friend request:", error);
+      setManageMessage("Failed to cancel friend request");
+    }
+  };
+
+  const handleRemoveFriend = async (friendId: string) => {
+    try {
+      const response = await fetch(`/api/friend-request/remove`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId, friendId }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setManageMessage("Friend removed!");
+        setFriendsList((prev) => prev.filter((id) => id !== friendId));
+      } else {
+        setManageMessage(data.message || "Failed to remove friend");
+      }
+    } catch (error) {
+      console.error("Error removing friend:", error);
+      setManageMessage("Failed to remove friend");
+    }
+  };
+
+  const isFriend = (friendId: string) => {
+    return friendsList.includes(friendId);
+  };
+
+  const isPending = (friendId: string) => {
+    return pendingRequests.includes(friendId);
+  };
+
   return (
     <div className="p-2 h-screen bottom-16 pt-20">
+      <BackButton
+        label="Back"
+        className="fixed left-4 text-textcolor rounded-md w-12 flex items-center"
+      />
       <div className="w-full flex items-center justify-center">
         <div className="w-11/12 max-w-96 flex items-center justify-center">
           <input
@@ -164,7 +289,7 @@ const UserMemberSearch = ({
           />
           <button
             onClick={handleSearch}
-            className="bg-btn p-2 rounded-md shadow-lg h-10 w-10"
+            className="bg-btn ml-2 p-2 rounded-md shadow-lg h-10 w-10"
           >
             <Image src={searchIcon} alt="Search" width={24} height={24} />
           </button>
@@ -178,7 +303,9 @@ const UserMemberSearch = ({
       <div className="mt-4 flex flex-col justify-center items-center">
         {searchResults.map((user) => {
           const currentStatus = inviteStatuses[user._id] || "none";
-          const isMember = playgroupMembers.includes(user._id);
+          const isMember = playgroupMembers.some(
+            (member: any) => member._id === user._id
+          );
           return (
             <div
               key={user._id}
@@ -209,7 +336,7 @@ const UserMemberSearch = ({
                 <div className="flex flex-row sm:justify-center items-center col-start-3 col-span-2 row-start-2 row-span-2 sm:row-start-1 sm:row-span-1 sm:col-start-6 sm:col-span-1">
                   <Image
                     src={friendsIcon}
-                    alt="User Avatar"
+                    alt="Friends Icon"
                     width={25}
                     height={25}
                     className="w-6 h-6 object-cover"
@@ -221,7 +348,7 @@ const UserMemberSearch = ({
                 <div className="flex flex-row sm:justify-center items-center col-start-5 col-span-2 row-start-2 row-span-2 sm:row-start-1 sm:row-span-1 sm:col-start-7 sm:col-span-1">
                   <Image
                     src={playgroupIcon}
-                    alt="User Avatar"
+                    alt="Playgroup Icon"
                     width={25}
                     height={25}
                     className="w-6 h-6 object-cover"
@@ -231,24 +358,62 @@ const UserMemberSearch = ({
                   </p>
                 </div>
                 <div className="flex flex-row items-center col-start-7 row-start-2 row-span-2 sm:row-start-1 sm:row-span-1 sm:col-start-8">
-                  <Image
-                    src={addFriend}
-                    alt="User Avatar"
-                    width={25}
-                    height={25}
-                    className="w-6 h-6 object-cover"
-                  />
+                  <div className="col-span-2 flex justify-end space-x-2">
+                    {isFriend(user._id) ? (
+                      <button
+                        onClick={() => {
+                          setSelectedFriend(user);
+                          setShowRemovePopup(true);
+                        }}
+                        className="w-12 h-8 rounded-lg flex justify-center items-center"
+                      >
+                        <Image
+                          src={removeFriendIcon}
+                          alt="Remove Friend"
+                          width={25}
+                          height={25}
+                          className="w-6 h-6"
+                        />
+                      </button>
+                    ) : isPending(user._id) ? (
+                      <button
+                        onClick={() => handleCancelRequest(user._id)}
+                        className="w-12 h-8 rounded-lg flex justify-center items-center"
+                      >
+                        <Image
+                          src={pendingIcon}
+                          alt="Pending"
+                          width={25}
+                          height={25}
+                          className="w-6 h-6"
+                        />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleAddFriend(user._id)}
+                        className="w-12 h-8 rounded-lg flex justify-center items-center"
+                      >
+                        <Image
+                          src={addFriendIcon}
+                          alt="Add Friend"
+                          width={25}
+                          height={25}
+                          className="w-6 h-6"
+                        />
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <div className="flex flex-row justify-center items-center col-start-8 col-span-2 row-start-1 row-span-2 sm:row-start-1 sm:row-span-1 sm:col-start-9 sm:col-span-1">
                   {isMember ? (
                     <div className="rounded-lg shadow-lg h-10 w-10 flex justify-center items-center">
-                        <Image
-                          src={member}
-                          alt="Member"
-                          width={40}
-                          height={40}
-                          className="h-full w-full"
-                        />
+                      <Image
+                        src={member}
+                        alt="Member"
+                        width={40}
+                        height={40}
+                        className="h-full w-full"
+                      />
                     </div>
                   ) : currentStatus === "pending" ? (
                     <button
@@ -278,6 +443,16 @@ const UserMemberSearch = ({
                         className="w-6 h-6"
                       />
                     </button>
+                  )}
+                  {showRemovePopup && selectedFriend && (
+                    <RemoveFriendPopup
+                      friendName={selectedFriend.username}
+                      onConfirm={() => {
+                        handleRemoveFriend(selectedFriend._id);
+                        setShowRemovePopup(false);
+                      }}
+                      onCancel={() => setShowRemovePopup(false)}
+                    />
                   )}
                 </div>
               </div>

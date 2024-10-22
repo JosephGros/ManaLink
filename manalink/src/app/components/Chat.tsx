@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import CustomLoader from "./CustomLoading";
 import Image from "next/image";
 import getSocket from "@/lib/socket";
+import InviteMessage from "./InviteMessage";
 
 interface Message {
   _id: string;
@@ -35,8 +36,6 @@ const Chat = React.memo(
     messageType: "user" | "group";
     otherUserId?: string;
   }) => {
-    console.log("Chat component rendered");
-
     const socket = getSocket();
 
     const [messages, setMessages] = useState<Message[]>([]);
@@ -54,7 +53,6 @@ const Chat = React.memo(
     const MESSAGES_PER_PAGE = 50;
 
     useEffect(() => {
-      console.log("Joining room: ", dmId || roomId);
       if (dmId) {
         socket.emit("join_dm", dmId);
       } else if (roomId) {
@@ -78,6 +76,26 @@ const Chat = React.memo(
         messageEndRef.current.scrollIntoView({ behavior: "smooth" });
       }
     };
+
+    useEffect(() => {
+      if (socket) {
+        socket.on("invite_response", (data: any) => {
+          if (data.inviteId) {
+            setMessages((prevMessages) =>
+              prevMessages.map((msg) =>
+                msg.metadata?.inviteId === data.inviteId
+                  ? { ...msg, responseStatus: data.status }
+                  : msg
+              )
+            );
+          }
+        });
+
+        return () => {
+          socket.off("invite_response");
+        };
+      }
+    }, [socket]);
 
     useEffect(() => {
       if (!otherUserId && messageType === "user") {
@@ -152,32 +170,6 @@ const Chat = React.memo(
         }
       } catch (error) {
         console.error("Error fetching users:", error);
-      }
-    };
-
-    const handleAcceptInvite = async (inviteId: string) => {
-      try {
-        await fetch(`/api/invites/${inviteId}/respond-to-invite`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ response: "accept", userId: currentUserId }),
-        });
-        alert("Invite accepted");
-      } catch (error) {
-        console.error("Failed to accept invite", error);
-      }
-    };
-
-    const handleDeclineInvite = async (inviteId: string) => {
-      try {
-        await fetch(`/api/invites/${inviteId}/respond-to-invite`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ response: "decline", userId: currentUserId }),
-        });
-        alert("Invite declined");
-      } catch (error) {
-        console.error("Failed to decline invite", error);
       }
     };
 
@@ -296,27 +288,10 @@ const Chat = React.memo(
                       </div>
                       <div className="bg-bg2 text-textcolor p-2 rounded-xl max-w-xs break-words whitespace-pre-line">
                         {msg.metadata?.inviteId ? (
-                          <>
-                            <p>{msg.content}</p>
-                            <div className="invite-actions flex justify-between mt-2">
-                              <button
-                                onClick={() =>
-                                  handleDeclineInvite(msg.metadata!.inviteId!)
-                                }
-                                className="bg-btn text-danger p-2 rounded-md"
-                              >
-                                Decline
-                              </button>
-                              <button
-                                onClick={() =>
-                                  handleAcceptInvite(msg.metadata!.inviteId!)
-                                }
-                                className="bg-btn text-nav p-2 rounded-md"
-                              >
-                                Accept
-                              </button>
-                            </div>
-                          </>
+                          <InviteMessage
+                            inviteId={msg.metadata!.inviteId!}
+                            userId={currentUserId}
+                          />
                         ) : (
                           msg.content
                         )}
@@ -326,7 +301,7 @@ const Chat = React.memo(
                 )}
                 {msg.senderId === currentUserId && (
                   <div className="flex flex-col">
-                    <p className="text-xs text-icon">
+                    <p className="text-xs text-icon place-self-end">
                       {msg?.createdAt
                         ? new Date(msg.createdAt).toLocaleString()
                         : ""}

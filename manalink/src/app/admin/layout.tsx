@@ -16,7 +16,6 @@ async function AdminLayout({ children }: { children: React.ReactNode }) {
     const jwtSecret = process.env.JWT_SECRET as string;
 
     decodedToken = jwt.verify(token, jwtSecret) as { role: string };
-    console.log("Decoded Token:", decodedToken);
 
   } catch (error:any) {
         console.error('Error verifying token:', error.message);
@@ -25,7 +24,6 @@ async function AdminLayout({ children }: { children: React.ReactNode }) {
 
 
     if (decodedToken.role !== 'admin') {
-        console.log('Redirecting to /not-authorized due to non-admin role');
         redirect('/not-authorized');
     }
 

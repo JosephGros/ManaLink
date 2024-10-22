@@ -20,7 +20,6 @@ async function AdminAndModeratorLayout({ children }: { children: React.ReactNode
     }
 
     decodedToken = jwt.verify(token, jwtSecret) as { role: string };
-    console.log("Decoded Token:", decodedToken);
 
   } catch (error: any) {
     console.error('Token verification failed:', error.message);
@@ -28,7 +27,6 @@ async function AdminAndModeratorLayout({ children }: { children: React.ReactNode
   }
 
   if (decodedToken.role !== 'admin' && decodedToken.role !== 'moderator') {
-    console.log('Redirecting to /not-authorized due to insufficient role');
     return redirect('/not-authorized');
   }
 

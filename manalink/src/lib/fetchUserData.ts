@@ -1,6 +1,7 @@
 export async function fetchUserData(token: string) {
+  const baseUrl = process.env.BASE_URL || "https://mana-link.se";
   try {
-    const response = await fetch(`${process.env.BASE_URL}/api/user-profile`, {
+    const response = await fetch(`${baseUrl}/api/user-profile`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
