@@ -20,6 +20,7 @@ const ProfileComponent = () => {
         const response = await fetch("/api/user-profile");
         const data = await response.json();
         setUser(data.user);
+        console.log(data.user);
       } catch (error) {
         console.error("Failed to load user", error);
       } finally {
@@ -154,14 +155,14 @@ const ProfileComponent = () => {
                 </div>
                 <div className="flex items-center mb-5 ml-2">
                   <Image
-                    src="/assets/Icons/IconColor/trophy-star.png"
-                    alt="Achievements Icon"
+                    src="/assets/Icons/IconColor/card-heart.png"
+                    alt="Decks Icon"
                     width={28}
                     height={28}
                     className="mr-4"
                   />
-                  <a href="" className="text-base font-bold">
-                    {user.achievements.length} - Achievements
+                  <a href="/decks" className="text-base font-bold">
+                    {user.decks.length || 0} - Decks
                   </a>
                 </div>
                 <div className="flex items-center mb-5 ml-2">
@@ -188,7 +189,7 @@ const ProfileComponent = () => {
                     {user.gamesWon} - Wins
                   </a>
                 </div>
-                <div className="flex items-center mb-5 ml-2">
+                {/* <div className="flex items-center mb-5 ml-2">
                   <Image
                     src="/assets/Icons/IconColor/book-dead12.png"
                     alt="Games Played Icon"
@@ -199,19 +200,9 @@ const ProfileComponent = () => {
                   <a href="" className="text-base font-bold">
                     {user.gamesPlayed} - Games Played
                   </a>
-                </div>
+                </div> */}
               </div>
               <div className="flex flex-row justify-evenly">
-                <button className="bg-btn text-nav px-4 py-1 rounded-lg font-bold w-28 flex justify-center">
-                    <a href="/friend/user-search">
-                    <Image
-                        src={addFriendsIcon}
-                        alt="Pending"
-                        width={25}
-                        height={25}
-                    />
-                    </a>
-                </button>
                 <button className="bg-btn text-nav px-4 py-1 rounded-lg font-bold w-28 flex justify-center">
                     <a href="/friend/user-search">
                     <Image

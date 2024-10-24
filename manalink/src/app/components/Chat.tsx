@@ -234,7 +234,7 @@ const Chat = React.memo(
 
     if (loading && page === 1) {
       return (
-        <div className="flex justify-center">
+        <div className="flex justify-center items-center">
           <CustomLoader />
         </div>
       );

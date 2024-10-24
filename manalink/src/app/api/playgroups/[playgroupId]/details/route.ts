@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongoose';
 import Playgroup from '@/models/Playgroup';
 
-export async function POST(req: Request) {
-  const { playgroupId } = await req.json();
+export async function POST(req: Request, { params }: { params: { playgroupId: string } }) {
+  const { playgroupId } = params;
 
   if (!playgroupId) {
     console.error('Playgroup ID is missing');

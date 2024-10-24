@@ -8,6 +8,9 @@ const images = [
   { src: "/assets/AppImages/screen3.png", alt: "Item 3" },
   { src: "/assets/AppImages/screen4.png", alt: "Item 4" },
   { src: "/assets/AppImages/screen5.png", alt: "Item 5" },
+  { src: "/assets/AppImages/screen6.png", alt: "Item 6" },
+  { src: "/assets/AppImages/screen7.png", alt: "Item 7" },
+  { src: "/assets/AppImages/screen8.png", alt: "Item 8" },
 ];
 
 const Carousel = () => {

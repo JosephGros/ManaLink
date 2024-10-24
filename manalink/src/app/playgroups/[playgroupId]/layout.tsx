@@ -28,28 +28,28 @@ const PlaygroupLayout = ({ children }: { children: React.ReactNode }) => {
         <Link href={`/playgroups/${playgroupId}/chat`} passHref>
           <button className={`${
               isActive("chat") ? "ring-4 ring-icon" : ""
-            } bg-btn text-nav p-3 rounded-lg shadow-lg h-10 w-24 flex justify-center items-center`}>
+            } bg-btn text-nav p-3 rounded-lg shadow-lg h-10 sm:w-24 w-20 flex justify-center items-center`}>
             <Image src={chat} alt="Playgroup" width={33} height={33} />
           </button>
         </Link>
         <Link href={`/playgroups/${playgroupId}/calendar`} passHref>
           <button className={`${
               isActive("calendar") ? "ring-4 ring-icon" : ""
-            } bg-btn text-nav p-3 rounded-lg shadow-lg h-10 w-24 flex justify-center items-center`}>
+            } bg-btn text-nav p-3 rounded-lg shadow-lg h-10 sm:w-24 w-20 flex justify-center items-center`}>
             <Image src={calendar} alt="Playgroup" width={33} height={33} />
           </button>
         </Link>
         <Link href={`/playgroups/${playgroupId}/games`} passHref>
           <button className={`${
               isActive("games") ? "ring-4 ring-icon" : ""
-            } bg-btn text-nav p-3 rounded-lg shadow-lg h-10 w-24 flex justify-center items-center`}>
+            } bg-btn text-nav p-3 rounded-lg shadow-lg h-10 sm:w-24 w-20 flex justify-center items-center`}>
             <Image src={games} alt="Playgroup" width={33} height={33} />
           </button>
         </Link>
         <Link href={`/playgroups/${playgroupId}/members`} passHref>
           <button className={`${
               isActive("members") ? "ring-4 ring-icon" : ""
-            } bg-btn text-nav p-3 rounded-lg shadow-lg h-10 w-24 flex justify-center items-center`}>
+            } bg-btn text-nav p-3 rounded-lg shadow-lg h-10 sm:w-24 w-20 flex justify-center items-center`}>
             <Image src={members} alt="Playgroup" width={33} height={33} />
           </button>
         </Link>

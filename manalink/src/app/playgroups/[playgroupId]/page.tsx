@@ -60,8 +60,38 @@ export default async function PlaygroupPage({
         <h1 className="font-bold text-textcolor text-4xl mb-4 truncate max-w-72">
           {playgroup.playgroup.playgroupname}
         </h1>
-        <PlaygroupAdminCard user={user.user} currentUserId={currentUser.user._id}/>
-        <p>Members: {playgroup.playgroup.members.length}</p>
+        <PlaygroupAdminCard
+          user={user.user}
+          currentUserId={currentUser.user._id}
+        />
+        <div className="flex flex-col justify-center items-center w-full">
+          <div className="mt-4 font-bold text-textcolor text-lg">
+            <div className="flex items-center mb-5 ml-2">
+              <Image
+                src="/assets/Icons/IconColor/users.png"
+                alt="Friends Icon"
+                width={38}
+                height={38}
+                className="mr-4"
+              />
+              <a href="/friend/friendList" className="text-xl font-bold">
+                {playgroup.playgroup.members.length} - Members
+              </a>
+            </div>
+            <div className="flex items-center mb-5 ml-2">
+              <Image
+                src="/assets/Icons/IconColor/subscription-user (1).png"
+                alt="Friend Requests Icon"
+                width={38}
+                height={38}
+                className="mr-4"
+              />
+              <a href="/friend/requests" className="text-xl font-bold">
+                {playgroup.playgroup.games.length} - Games Played
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </PlaygroupLayout>
   );

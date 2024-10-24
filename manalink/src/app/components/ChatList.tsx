@@ -49,16 +49,13 @@ const fetchMessages = async (userId: string): Promise<MessageItem[]> => {
           };
         }
 
-        const userResponse = await fetch(
-          '/api/user-details',
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ userId: otherUserId }),
-          }
-        );
+        const userResponse = await fetch("/api/user-details", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId: otherUserId }),
+        });
         const otherUser = await userResponse.json();
 
         if (otherUser) {
@@ -133,7 +130,7 @@ const MessagesPage = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center">
+      <div className="flex justify-center items-center">
         <CustomLoader />
       </div>
     );
@@ -155,7 +152,7 @@ const MessagesPage = () => {
                 : `/playgroups/${message.id}?playgroup=${message.name}&playgroupId=${message.id}`
             }
           >
-            <div className="flex items-center p-2 sm:w-96 w-80 bg-bg2 rounded-lg hover:bg-bg3 cursor-pointer shadow-md my-1">
+            <div className="flex items-center p-2 sm:w-96 w-80 bg-bg2 rounded-lg hover:bg-bg3 cursor-pointer shadow-md my-1 relative">
               <div className="flex-shrink-0 w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center">
                 <Image
                   src={message.profilePicture}
@@ -177,7 +174,7 @@ const MessagesPage = () => {
                 {message.readBy &&
                   message.readBy.length > 0 &&
                   !message.readBy.includes(user._id) && (
-                    <span className="block w-3 h-3 rounded-full bg-btn"></span>
+                    <span className="block w-4 h-4 rounded-full bg-btn absolute top-[-3px] right-[-3px]"></span>
                   )}
               </div>
             </div>

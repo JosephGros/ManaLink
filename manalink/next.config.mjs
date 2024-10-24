@@ -13,6 +13,16 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cards.scryfall.io', // Your external image hostname
+        port: '',
+        pathname: '/**', // Allow all paths
+      },
+    ],
+  },
 };
 
 export default withPWA(nextConfig);

@@ -23,7 +23,6 @@ const InviteMessage: React.FC<InviteMessageProps> = ({
 
     const inviteSentListener = (data: any) => {
       if (data.inviteId === inviteId) {
-        console.log("Received invite_sent event:", data);
         setResponseStatus("pending");
       }
     };

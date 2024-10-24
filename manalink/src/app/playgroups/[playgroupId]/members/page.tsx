@@ -171,7 +171,7 @@ const PlaygroupMembers = () => {
             />
           </button>
           <button
-            onClick={handleLeaveGroup}
+            onClick={handleLeaveGroupClick}
             className="col-start-2 bg-btn text-nav p-3 rounded-lg shadow-lg h-10 w-24 flex justify-center items-center"
           >
             <Image

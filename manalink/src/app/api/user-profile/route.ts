@@ -45,7 +45,7 @@ export async function GET(req: Request) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
-        return NextResponse.json({ user });
+        return NextResponse.json({ user, token });
     } catch (error: any) {
         return NextResponse.json(
             { error: "Failed to retrieve user info", details: error.message },

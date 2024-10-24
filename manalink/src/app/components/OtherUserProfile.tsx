@@ -28,7 +28,7 @@ const OtherUserProfileComponent = ({
   const [showRemovePopup, setShowRemovePopup] = useState(false);
   const [showMessagePopup, setShowMessagePopup] = useState(false);
   const router = useRouter();
-
+  
   useEffect(() => {
     const checkFriendStatus = () => {
       if (
@@ -235,17 +235,17 @@ const OtherUserProfileComponent = ({
                 </a>
               </div>
               <div className="flex items-center mb-5 ml-2">
-                <Image
-                  src="/assets/Icons/IconColor/trophy-star.png"
-                  alt="Achievements Icon"
-                  width={28}
-                  height={28}
-                  className="mr-4"
-                />
-                <a href="" className="text-base font-bold">
-                  {profileUser.achievements.length} - Achievements
-                </a>
-              </div>
+                  <Image
+                    src="/assets/Icons/IconColor/card-heart.png"
+                    alt="Decks Icon"
+                    width={28}
+                    height={28}
+                    className="mr-4"
+                  />
+                  <a href="/decks" className="text-base font-bold">
+                    {profileUser.decks.length || 0} - Decks
+                  </a>
+                </div>
               <div className="flex items-center mb-5 ml-2">
                 <Image
                   src="/assets/Icons/IconColor/dice-d20_1.png"

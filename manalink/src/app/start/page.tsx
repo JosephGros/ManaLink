@@ -9,7 +9,10 @@ export default function Home() {
     "/assets/AppImages/screen2.png", 
     "/assets/AppImages/screen3.png", 
     "/assets/AppImages/screen4.png", 
-    "/assets/AppImages/screen5.png" 
+    "/assets/AppImages/screen5.png",
+    "/assets/AppImages/screen6.png",
+    "/assets/AppImages/screen7.png",
+    "/assets/AppImages/screen8.png"
   ];
 
   return (
@@ -33,10 +36,10 @@ export default function Home() {
         </p>
       </div>
       <div className="flex space-x-4 mb-10">
-        <button className="w-32 h-10 bg-light-btn rounded-md text-nav font-bold shadow-lg hover:bg-light-btn-hover">
+        <button className="w-32 h-10 bg-btn rounded-md text-nav font-bold shadow-lg hover:bg-light-btn-hover">
           <a href="/register">Register</a>
         </button>
-        <button className="w-32 h-10 bg-light-btn rounded-md text-nav font-bold shadow-lg hover:bg-light-btn-hover">
+        <button className="w-32 h-10 bg-btn rounded-md text-nav font-bold shadow-lg hover:bg-light-btn-hover">
           <a href="/login">Login</a>
         </button>
       </div>

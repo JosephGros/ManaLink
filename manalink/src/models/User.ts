@@ -76,6 +76,47 @@ const UserSchema = new mongoose.Schema({
             }],
         default: []
     },
+    manalinks: {
+        type: [
+            {
+                playgroupId: mongoose.Schema.Types.ObjectId,
+                bookingId: mongoose.Schema.Types.ObjectId
+            }],
+        default: []
+    },
+    decks: {
+        type: [
+            {
+                commanderId: mongoose.Schema.Types.ObjectId,
+                deckName: String,
+                commanderName: String,
+                manaCost: String,
+                image_uris: {
+                    small: String,
+                    normal: String,
+                    large: String,
+                    png: String,
+                    art_crop: String,
+                    border_crop: String
+                  },
+                mana_symbols: [
+                    {
+                      symbol: String,
+                      svg_uri: String,
+                    },
+                  ],
+                wins: [
+                    {
+                        gameId: mongoose.Schema.Types.ObjectId,
+                    }],
+                losses: [
+                    {
+                        gameId: mongoose.Schema.Types.ObjectId,
+                    }
+                ]
+            }],
+        default: []
+    },
     achievements: {
         type: [String],
         default: []

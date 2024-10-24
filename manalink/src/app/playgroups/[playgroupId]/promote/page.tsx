@@ -1,76 +1,76 @@
-import { NextResponse } from "next/server";
-import dbConnect from "@/lib/mongoose";
-import Playgroup from "@/models/Playgroup";
-import jwt from "jsonwebtoken";
+// import { NextResponse } from "next/server";
+// import dbConnect from "@/lib/mongoose";
+// import Playgroup from "@/models/Playgroup";
+// import jwt from "jsonwebtoken";
 
-const JWT_SECRET: any = process.env.JWT_SECRET;
+// const JWT_SECRET: any = process.env.JWT_SECRET;
 
-export async function POST(
-  req: Request,
-  { params }: { params: { playgroupId: string } }
-) {
-  await dbConnect();
+// export async function POST(
+//   req: Request,
+//   { params }: { params: { playgroupId: string } }
+// ) {
+//   await dbConnect();
 
-  const cookieStore = req.headers.get("cookie") || "";
-  const token = cookieStore.split("token=")[1]?.split(";")[0];
+//   const cookieStore = req.headers.get("cookie") || "";
+//   const token = cookieStore.split("token=")[1]?.split(";")[0];
 
-  if (!token) {
-    return NextResponse.json(
-      { success: false, error: "No token found, please log in" },
-      { status: 401 }
-    );
-  }
+//   if (!token) {
+//     return NextResponse.json(
+//       { success: false, error: "No token found, please log in" },
+//       { status: 401 }
+//     );
+//   }
 
-  let currentUserId;
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    currentUserId = (decoded as any).id;
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: "Invalid token, please log in again" },
-      { status: 401 }
-    );
-  }
+//   let currentUserId;
+//   try {
+//     const decoded = jwt.verify(token, JWT_SECRET);
+//     currentUserId = (decoded as any).id;
+//   } catch (error) {
+//     return NextResponse.json(
+//       { success: false, error: "Invalid token, please log in again" },
+//       { status: 401 }
+//     );
+//   }
 
-  const { memberId } = await req.json();
+//   const { memberId } = await req.json();
 
-  try {
-    const playgroup = await Playgroup.findById(params.playgroupId);
+//   try {
+//     const playgroup = await Playgroup.findById(params.playgroupId);
 
-    if (!playgroup) {
-      return NextResponse.json(
-        { success: false, error: "Playgroup not found" },
-        { status: 404 }
-      );
-    }
+//     if (!playgroup) {
+//       return NextResponse.json(
+//         { success: false, error: "Playgroup not found" },
+//         { status: 404 }
+//       );
+//     }
 
-    if (playgroup.admin.toString() !== currentUserId) {
-      return NextResponse.json(
-        { success: false, error: "Only the admin can promote members" },
-        { status: 403 }
-      );
-    }
+//     if (playgroup.admin.toString() !== currentUserId) {
+//       return NextResponse.json(
+//         { success: false, error: "Only the admin can promote members" },
+//         { status: 403 }
+//       );
+//     }
 
-    if (!playgroup.members.includes(memberId)) {
-      return NextResponse.json(
-        { success: false, error: "User is not a member of this playgroup" },
-        { status: 400 }
-      );
-    }
+//     if (!playgroup.members.includes(memberId)) {
+//       return NextResponse.json(
+//         { success: false, error: "User is not a member of this playgroup" },
+//         { status: 400 }
+//       );
+//     }
 
-    if (!playgroup.moderators.includes(memberId)) {
-      playgroup.moderators.push(memberId);
-      await playgroup.save();
-    }
+//     if (!playgroup.moderators.includes(memberId)) {
+//       playgroup.moderators.push(memberId);
+//       await playgroup.save();
+//     }
 
-    return NextResponse.json(
-      { success: true, message: "Member promoted to moderator" },
-      { status: 200 }
-    );
-  } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    );
-  }
-}
+//     return NextResponse.json(
+//       { success: true, message: "Member promoted to moderator" },
+//       { status: 200 }
+//     );
+//   } catch (error: any) {
+//     return NextResponse.json(
+//       { success: false, error: error.message },
+//       { status: 500 }
+//     );
+//   }
+// }

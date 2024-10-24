@@ -190,14 +190,14 @@ const PlaygroupMembersList = ({ playgroupId }: { playgroupId: string }) => {
             label="Back"
             className="fixed left-4 text-textcolor rounded-md w-12 flex items-center"
           />
-          <h2 className="text-3xl font-bold">Playgroup Members</h2>
+          <h2 className="text-3xl font-bold">Members</h2>
         </div>
         <div className="fixed top-20 left-0 right-0 bottom-20 pt-4 flex flex-col items-center mx-2 overflow-auto flex-grow">
           <div className="flex flex-wrap justify-center w-3/4">
             {membersList.map((member) => (
               <div
                 key={member._id}
-                className="flex items-center justify-between p-2 bg-bg2 mx-2 rounded-lg my-1 shadow-md h-18 w-64"
+                className="flex items-center justify-between p-2 bg-bg2 mx-2 rounded-lg my-1 shadow-md h-18 w-80"
               >
                 <div className="flex flex-row justify-center justify-between items-center w-full">
                   <div className="flex flex-col justify-center items-center w-18">

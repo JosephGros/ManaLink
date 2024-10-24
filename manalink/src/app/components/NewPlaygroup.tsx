@@ -81,7 +81,10 @@ const NewPlaygroupModal = ({ onClose }: { onClose: () => void }) => {
                 {num}
               </option>
             ))}
-            <option value="infinite">Unlimited</option>
+            <option value="50">Big Group (50)</option>
+            <option value="100">Bigger Group (100)</option>
+            <option value="1000">That's alot of friends (1k)</option>
+            <option value="10000">There's no way (10k)</option>
           </select>
         </div>
 

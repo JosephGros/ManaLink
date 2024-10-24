@@ -144,9 +144,7 @@ const LoginForm = () => {
     <>
       <div className="flex justify-center">
         <div className="flex flex-col w-4/5 max-w-96 p-4 rounded-md bg-bg2 justify-center items-center">
-          <h1 className="font-bold text-textcolor text-4xl pb-6">
-            Login
-          </h1>
+          <h1 className="font-bold text-textcolor text-4xl pb-6">Login</h1>
           {!twoFactorRequired ? (
             <form onSubmit={handleSubmit}>
               <div className="flex justify-center drop-shadow-md">
@@ -193,7 +191,7 @@ const LoginForm = () => {
                 </button>
               </div>
               <div className="flex flex-row justify-center w-96 pt-4">
-                <button className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold shadow-lg">
+                <button className="w-28 h-9 bg-btn rounded-md text-nav font-bold shadow-lg">
                   <a href="/register">Register</a>
                 </button>
                 <div className="w-16 h-9 content-center">
@@ -207,7 +205,7 @@ const LoginForm = () => {
                 </div>
                 <button
                   type="submit"
-                  className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold shadow-lg"
+                  className="w-28 h-9 bg-btn rounded-md text-nav font-bold shadow-lg"
                 >
                   Login
                 </button>
@@ -237,7 +235,7 @@ const LoginForm = () => {
               <div className="flex flex-row justify-center w-96 pt-6">
                 <button
                   type="submit"
-                  className="w-28 h-9 bg-light-btn rounded-md text-nav font-bold shadow-lg"
+                  className="w-28 h-9 bg-btn rounded-md text-nav font-bold shadow-lg"
                 >
                   Verify 2FA
                 </button>

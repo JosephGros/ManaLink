@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import useTokenAutoRefresh from "@/lib/autoTokenRefresh";
 
 const APP_NAME = "ManaLink";
 const APP_DEFAULT_TITLE = "ManaLink";

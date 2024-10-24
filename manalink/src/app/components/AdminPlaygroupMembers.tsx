@@ -184,7 +184,7 @@ const AdminPlaygroupMembersList = ({
   return (
     <div className="text-textcolor">
       {loading && (
-        <div className="flex justify-center">
+        <div className="flex justify-center items-center">
           <CustomLoader />
         </div>
       )}
@@ -194,7 +194,7 @@ const AdminPlaygroupMembersList = ({
             label="Back"
             className="fixed left-4 text-textcolor rounded-md w-12 flex items-center"
           />
-          <h2 className="text-3xl font-bold">Playgroup Members</h2>
+          <h2 className="text-3xl font-bold">Members</h2>
           <Image
             src={adminIcon}
             alt="Admin"

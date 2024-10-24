@@ -96,7 +96,11 @@ const FriendRequestList = () => {
   };
 
   if (loading) {
-    return <CustomLoader />;
+    return (
+      <div className="flex justify-center items-center">
+        <CustomLoader />
+      </div>
+    );
   }
 
   return (
