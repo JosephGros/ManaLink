@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 
-const protectedRoutes = ['/', '/home', '/profile', '/admin', '/chat', '/friend', '/messages', '/moderator', '/otherUserProfile', '/playgroups', '/user-settings', '/request-pass-reset', '/reset-password', '/search-user'];
+const protectedRoutes = ['/', '/home', '/profile', '/admin', '/chat', '/friend', '/messages', '/moderator', '/otherUserProfile', '/playgroups', '/user-settings', '/search-user', '/decks', '/forum', ];
 
 export function middleware(req: NextRequest) {
 
@@ -37,8 +37,6 @@ export const config = {
         '/otherUserProfile/:path*',
         '/playgroups/:path*',
         '/user-settings/:path*',
-        '/request-pass-reset/:path*',
-        '/reset-password/:path*',
         '/search-user/:path*'
     ],
 };

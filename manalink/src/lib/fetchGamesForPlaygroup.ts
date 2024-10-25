@@ -1,5 +1,5 @@
 export const fetchGamesForPlaygroup = async (token: string, playgroupId: string) => {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://mana-link.se';
     const apiUrl = `${baseUrl}/api/games?playgroupId=${playgroupId}`;
   
     const response = await fetch(apiUrl, {

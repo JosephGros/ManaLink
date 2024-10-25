@@ -7,7 +7,7 @@ import ManaLinkLogo from "../../../public/assets/ManaLinkLogo.png";
 
 
 const JWT_SECRET: any = process.env.JWT_SECRET;
-const BASE_URL = process.env.BASE_URL || "https://localhost:3000";
+const BASE_URL = process.env.BASE_URL || "https://mana-link.se";
 
 export async function POST(req: Request) {
     try {

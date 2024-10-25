@@ -1,5 +1,5 @@
 export async function fetchPlaygroupData(token: string, playgroupId: string) {
-    const baseUrl = process.env.BASE_URL || "http://localhost:3000";
+    const baseUrl = process.env.BASE_URL || "https://mana-link.se";
     if (!playgroupId) {
         throw new Error("Playgroup ID is required");
       }
