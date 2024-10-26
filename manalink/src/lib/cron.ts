@@ -11,7 +11,6 @@ const cleanUpBookings = async (): Promise<void> => {
     await Booking.deleteMany({
       date: { $lt: new Date(now.getTime() - 24 * 60 * 60 * 1000) }
     });
-    console.log('Expired bookings cleaned up');
   } catch (error) {
     console.error('Error cleaning up bookings:', error);
   }

@@ -117,8 +117,8 @@ const ResetPasswordForm = () => {
           </div>
         </form>
         <div className="mt-4">
-          {message && <p style={{ color: "green" }}>{message}</p>}
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          {message && <p className="font-bold text-textcolor">{message}</p>}
+          {error && <p className="font-bold text-danger">{error}</p>}
         </div>
       </div>
     </div>

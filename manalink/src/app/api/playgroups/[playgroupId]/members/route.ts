@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 interface GroupMember {
     _id: string;
     username: string;
+    userCode: string;
     profilePicture: string;
     level: number;
     isAdmin?: boolean;
@@ -22,7 +23,7 @@ export async function GET(req: NextRequest, { params }: { params: { playgroupId:
         const playgroup = await Playgroup.findById(playgroupId)
             .populate({
                 path: 'members',
-                select: '_id username profilePicture level',
+                select: '_id username profilePicture level userCode',
             })
             .lean();
 

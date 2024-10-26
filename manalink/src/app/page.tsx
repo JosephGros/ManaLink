@@ -94,7 +94,6 @@ const HomePage = () => {
             });
           setBookings(sortedBookings);
           setIsLoading(false);
-          console.log(bookingsData);
         }
       } catch (error) {
         console.error("Error fetching user data or bookings:", error);

@@ -28,7 +28,6 @@ export async function GET(req: NextRequest, { params }: { params: { bookingId: s
       await dbConnect();
       const { searchParams } = new URL(req.url);
       const bookingId = searchParams.get('bookingId');
-      console.log(bookingId);
 
       const booking = await Booking.findById(bookingId)
       .populate('attendees.userId', '_id username profilePicture level')

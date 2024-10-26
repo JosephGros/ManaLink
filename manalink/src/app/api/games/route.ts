@@ -26,6 +26,12 @@ interface Deck {
     losses: { gameId: mongoose.Types.ObjectId }[];
 }
 
+interface Participant {
+    userId: string;
+    deckId: string;
+}
+
+
 export async function GET(req: Request) {
     try {
         await dbConnect();
@@ -60,8 +66,29 @@ export async function POST(req: Request) {
             winningUserId,
             winningUsername,
             amountOfPlayers,
-            winningDeck
+            winningDeck,
+            participants
+        }: {
+            date: Date;
+            playgroupId: string;
+            playgroupName: string;
+            winningUserId: string;
+            winningUsername: string;
+            amountOfPlayers: number;
+            winningDeck: Deck;
+            participants: Participant[];
         } = await req.json();
+
+        console.log("Incoming data for new game creation:", {
+            date,
+            playgroupId,
+            playgroupName,
+            winningUserId,
+            winningUsername,
+            amountOfPlayers,
+            winningDeck,
+            participants,
+        });
 
         const newGame = new Game({
             date,
@@ -71,12 +98,13 @@ export async function POST(req: Request) {
             winningUsername,
             amountOfPlayers,
             winningDeck,
+            participants: participants.map(({ userId }) => userId)
         });
 
         const savedGame = await newGame.save();
+        if (!savedGame) throw new Error("Game save operation failed.");
 
         const playgroup = await Playgroup.findById(playgroupId);
-
         if (playgroup) {
             playgroup.games.push(savedGame._id);
             await playgroup.save();
@@ -84,25 +112,31 @@ export async function POST(req: Request) {
             return NextResponse.json({ success: false, error: 'Playgroup not found' }, { status: 404 });
         }
 
-        const user = await User.findById(winningUserId);
-
-        if (user) {
-            user.gamesWon += 1;
-            user.wins.push(savedGame._id);
-
-            const deck: Deck | undefined = user.decks.find(
-                (deck: Deck) => deck.commanderId.toString() === winningDeck.commanderId
-            );
-
-            if (deck) {
-                deck.wins.push({ gameId: savedGame._id });
-            }
-
-            await user.save();
-        }
+        await Promise.all(
+            participants.map(async ({ userId, deckId }: Participant) => {
+                const user = await User.findById(userId);
+                if (user) {
+                    user.gamesPlayed += 1;
+                    if (userId === winningUserId) {
+                        user.gamesWon += 1;
+                    }
+                    
+                    const deck = user.decks.find((d: Deck) => d.commanderId.toString() === deckId.toString());
+                    if (deck) {
+                        if (userId === winningUserId) {
+                            deck.wins.push({ gameId: savedGame._id });
+                        } else {
+                            deck.losses.push({ gameId: savedGame._id });
+                        }
+                    }                    
+                    await user.save();
+                }
+            })
+        );
 
         return NextResponse.json({ success: true, game: savedGame });
     } catch (error: any) {
+        console.error("Error in POST /api/games:", error);
         return NextResponse.json({ success: false, error: error.message });
     }
 }

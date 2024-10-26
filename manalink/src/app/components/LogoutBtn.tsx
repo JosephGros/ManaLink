@@ -32,7 +32,7 @@ const LogoutButton = () => {
 
   return (
     <div>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="font-bold text-danger">{error}</p>}
       <button
         onClick={handleLogout}
         className="bg-btn text-nav rounded-md w-28 h-9 font-bold shadow-lg"

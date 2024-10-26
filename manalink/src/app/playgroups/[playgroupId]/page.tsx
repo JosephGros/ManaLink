@@ -74,9 +74,9 @@ export default async function PlaygroupPage({
                 height={38}
                 className="mr-4"
               />
-              <a href="/friend/friendList" className="text-xl font-bold">
+              <p>
                 {playgroup.playgroup.members.length} - Members
-              </a>
+              </p>
             </div>
             <div className="flex items-center mb-5 ml-2">
               <Image
@@ -86,9 +86,9 @@ export default async function PlaygroupPage({
                 height={38}
                 className="mr-4"
               />
-              <a href="/friend/requests" className="text-xl font-bold">
+              <p>
                 {playgroup.playgroup.games.length} - Games Played
-              </a>
+              </p>
             </div>
           </div>
         </div>

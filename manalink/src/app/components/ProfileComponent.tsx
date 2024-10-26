@@ -20,7 +20,6 @@ const ProfileComponent = () => {
         const response = await fetch("/api/user-profile");
         const data = await response.json();
         setUser(data.user);
-        console.log(data.user);
       } catch (error) {
         console.error("Failed to load user", error);
       } finally {

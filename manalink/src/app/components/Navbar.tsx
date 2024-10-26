@@ -63,7 +63,7 @@ const Navbar = () => {
   return (
     <nav className="bg-nav fixed bottom-0 w-full pb-4 h-20 flex justify-around items-center shadow-lg z-20">
       <Link href="/forum" passHref>
-        <button className={`flex flex-col items-center justify-center ${getActiveClass('/users')} w-14 h-14`}>
+        <button className={`flex flex-col items-center justify-center ${getActiveClass('/forum')} w-14 h-14`}>
           <Image src={UsersIcon} alt="Users" width={35} height={35} />
         </button>
       </Link>

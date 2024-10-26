@@ -26,7 +26,8 @@ const config: Config = {
       backgroundImage: {
         'light-btn': "linear-gradient(to bottom, #B4E3E3, #77D7D7)",
         'btn': "linear-gradient(to top, #327B7B, #39CCCC)",
-        'progressbar': "linear-gradient(to top, #4F4F4F, #B5B5B5)"
+        'progressbar': "linear-gradient(to top, #4F4F4F, #B5B5B5)",
+        'game-card': "linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.7) 100%)"
       },
       fontFamily: {
         robotoMono: ['"Roboto Mono"', 'monospace'],

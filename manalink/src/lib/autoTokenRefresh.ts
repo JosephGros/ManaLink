@@ -21,7 +21,7 @@ const useTokenAutoRefresh = () => {
 
       const data = await response.json();
       if (data.token) {
-        console.log('Token refreshed successfully');
+        // console.log('Token refreshed successfully');
       }
     } catch (error) {
       console.error('Error refreshing token:', error);

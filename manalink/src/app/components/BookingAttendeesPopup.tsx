@@ -47,7 +47,6 @@ const BookingAttendeesPopup = ({ bookingId, onClose }: BookingPopupProps) => {
         const response = await fetch(`/api/attendees?bookingId=${bookingId}`);
         const data = await response.json();
         setAttendees(data.attendees);
-        console.log("HOLA MI DATA : ", data);
       } catch (error) {
         console.error("Error fetching attendees:", error);
       } finally {
@@ -159,7 +158,6 @@ const BookingAttendeesPopup = ({ bookingId, onClose }: BookingPopupProps) => {
   };
 
   const isCurrentUser = (friendId: string) => {
-    console.log('UDUUDUDDUUDD : ', userId, friendId);
     return userId === friendId;
   };
 

@@ -145,7 +145,6 @@ const BookingList = ({ groupId }: { groupId: string }) => {
                 (att) => att.status === "yes"
               );
               const userStatus = userAttendee?.status || "pending";
-              console.log(userStatus);
               return (
                 <li
                   key={booking._id}
